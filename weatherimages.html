@@ -1,0 +1,125 @@
+<html>
+
+<head>
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    <title>Weather Time Lapse</title>
+    <script language="JavaScript" type="text/javascript">
+        var t = 5;
+        var scale = 10;
+        var imagefile;
+        var maxvalue;
+
+        image = "CurrentColorCamImage"; //name of the image
+        var playing = 0;
+
+        function ChangeImage(form) {
+            imagefile = form.image.value;
+            document.images["plot"].src = imagefile + ".jpg";
+        }
+
+
+        function Play_start() {
+            var oRequest = new XMLHttpRequest();
+            var sURL = "http://136.159.57.131/weatherimages/lastimage";
+
+            oRequest.open("GET", sURL, false);
+            oRequest.setRequestHeader("User-Agent", navigator.userAgent);
+            oRequest.send(null)
+
+            maxvalue = oRequest.responseText;
+
+
+            imagefile = document.scale.image.value;
+            Play();
+        }
+
+        function Play() {
+            if (imagefile == 2358) {
+                imagefile = 0000;
+            }
+            else {
+                if (((imagefile - 58) % 100) == 0) {
+                    imagefile = imagefile - 0 + 42;
+                }
+                else {
+                    imagefile = imagefile - 0 + 2;
+                }
+            }
+
+            if (imagefile >= 1000) {
+                //document.scale.image.value = imagefile;
+                document.images["plot"].src = imagefile + ".jpg";
+            }
+            else {
+                //document.scale.image.value = "0"+imagefile;
+                document.images["plot"].src = "0" + imagefile + ".jpg";
+            }
+
+            if (imagefile < maxvalue) {
+                setTimeout("Play()", 250);
+            }
+        }
+
+        function changeNextImage() {
+            document.images["NextButton"].src = "playbutton.jpg";
+            return true;
+        }
+
+        function changeNextImageBack() {
+            document.images["NextButton"].src = "playbutton.jpg";
+            return true;
+        }
+
+        function handleNextMDown() {
+            document.images["NextButton"].src = "playpressed.jpg";
+            return true;
+        }
+
+        function handleNextMUp() {
+            document.images["NextButton"].src = "playbutton.jpg";
+            Play_start();
+            return true;
+        }
+
+
+    </script>
+</head>
+
+<body BGCOLOR=#FFFFCC alink="#000099" link="#000099" vlink="#990099">
+    <img src="1400.jpg" name="plot" border="0">
+    <form name="scale">
+        <p>Start Time (HHMM) <select name="image" onChange="ChangeImage(this.form)">
+                <option value=0000 selected>0000
+                <option value=0100>0100
+                <option value=0200>0200
+                <option value=0300>0300
+                <option value=0400>0400
+                <option value=0500>0500
+                <option value=0600>0600
+                <option value=0700>0700
+                <option value=0800>0800
+                <option value=0900>0900
+                <option value=1000>1000
+                <option value=1100>1100
+                <option value=1200>1200
+                <option value=1300>1300
+                <option value=1400>1400
+                <option value=1500>1500
+                <option value=1600>1600
+                <option value=1700>1700
+                <option value=1800>1800
+                <option value=1900>1900
+                <option value=2000>2000
+                <option value=2100>2100
+                <option value=2200>2200
+                <option value=2300>2300
+            </select>
+        </p>
+        <p>
+            <A href="#" onMouseOver="return changeNextImage()" onMouseOut="return changeNextImageBack()"
+                onMouseDown="return handleNextMDown()" onMouseUp="return handleNextMUp()"><img name="NextButton"
+                    src="playbutton.jpg" alt="javascript button"></A>
+        </p>
+</body>
+
+</html>
