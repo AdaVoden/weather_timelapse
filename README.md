@@ -1,2 +1,4 @@
-# Weather Timelapse
-Rothney weather timelapse
+Clear Sky
+=========
+
+Weather timelapse tool
