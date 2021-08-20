@@ -4,13 +4,13 @@
     <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
     <title>Weather Time Lapse</title>
     <script language="JavaScript" type="text/javascript">
-        var t = 5;
-        var scale = 10;
-        var imagefile;
-        var maxvalue;
+        let t = 5;
+        let scale = 10;
+        let imagefile;
+        let maxvalue;
 
         image = "CurrentColorCamImage"; //name of the image
-        var playing = 0;
+        let playing = 0;
 
         function ChangeImage(form) {
             imagefile = form.image.value;
@@ -19,29 +19,31 @@
 
 
         function Play_start() {
-            var oRequest = new XMLHttpRequest();
-            var sURL = "http://136.159.57.131/weatherimages/lastimage";
+            const reqHeaders = new Headers();
+            reqHeaders.append("User-Agent", navigator.userAgent);
+            const sURL = "http://136.159.57.131/weatherimages";
+            const webReq = new Request(sURL, init={
+                method: "GET",
+                headers: reqHeaders,
+                mode: "no-cors",
+                cache: "force-cache",
+            });
 
-            oRequest.open("GET", sURL, false);
-            oRequest.setRequestHeader("User-Agent", navigator.userAgent);
-            oRequest.send(null)
+            fetch(webReq).then(Play());
 
-            maxvalue = oRequest.responseText;
+            /* maxvalue = xhr.responseText;
 
 
-            imagefile = document.scale.image.value;
-            Play();
+             * imagefile = document.scale.image.value; */
         }
 
         function Play() {
             if (imagefile == 2358) {
                 imagefile = 0000;
-            }
-            else {
+            } else {
                 if (((imagefile - 58) % 100) == 0) {
                     imagefile = imagefile - 0 + 42;
-                }
-                else {
+                } else {
                     imagefile = imagefile - 0 + 2;
                 }
             }
@@ -49,8 +51,7 @@
             if (imagefile >= 1000) {
                 //document.scale.image.value = imagefile;
                 document.images["plot"].src = imagefile + ".jpg";
-            }
-            else {
+            } else {
                 //document.scale.image.value = "0"+imagefile;
                 document.images["plot"].src = "0" + imagefile + ".jpg";
             }
@@ -80,8 +81,6 @@
             Play_start();
             return true;
         }
-
-
     </script>
 </head>
 
@@ -116,9 +115,7 @@
             </select>
         </p>
         <p>
-            <A href="#" onMouseOver="return changeNextImage()" onMouseOut="return changeNextImageBack()"
-                onMouseDown="return handleNextMDown()" onMouseUp="return handleNextMUp()"><img name="NextButton"
-                    src="playbutton.jpg" alt="javascript button"></A>
+            <A href="#" onMouseOver="return changeNextImage()" onMouseOut="return changeNextImageBack()" onMouseDown="return handleNextMDown()" onMouseUp="return handleNextMUp()"><img name="NextButton" src="playbutton.jpg" alt="javascript button"></A>
         </p>
 </body>
 
