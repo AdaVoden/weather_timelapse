@@ -1,18 +1,27 @@
-import { readable } from 'svelte/store';
-let maxValue: number;
+export function timelapse(node) {
+    let duration: number;
+    let paused: boolean = true;
+    let currentTime: number = 0;
+    let currentImage: string;
+    let bufferedImages: Array<string>;
 
-function getLatestFilename(url: string): string | null {
-  const reqHeaders = new Headers();
-  const init: Object = {
-    method: 'GET',
-    headers: reqHeaders,
-    mode: 'no-cors',
-    cache: 'force-cache',
-  };
-  const webReq: Request = new Request(url, init);
+    function play(){
+        paused = false;
+    }
+    function pause(){
+        paused = true;
+    }
 
-    const result = fetch(webReq)
-        .then((response: Response) => response.text())
-        .catch(() => null);
-  return result;
+    function handleMouseup(event) {
+        console.log(event)
+        node.dispatchEvent(new CustomEvent('lapseplaypause', {
+            target: {play, pause}
+        }));
+        
+    }
+    function handleMousemove(event) {
+        node.dispatchEvent(new CustomEvent('lapsemove'));
+        console.log(currentTime);
+    }
+
 }

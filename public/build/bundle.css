@@ -1,6 +1,98 @@
-body{width:100%;height:100%;margin:0px;padding:0px;font:1.8rem/1.5
- }.grid-container.svelte-9zy6ic{display:grid;grid-template-areas:"header"
-         "content"
-         "footer";grid-template-columns:1fr;grid-auto-rows:60px minmax(640px, auto) 100px}main.svelte-9zy6ic{grid-area:content;display:flex;align-items:center;justify-content:center}header.svelte-9zy6ic{grid-area:header;background:#d6001c;box-shadow:#6d6e71 0px -0.4rem 0.9rem 0.2rem;width:100%;height:100%;margin:0 auto;width:100vw;height:3rem;font-family:Monospace !important;-webkit-text-stroke:0.2px !important;text-stroke:0.2px !important}.flex-container.svelte-9zy6ic{display:flex;align-items:center;justify-content:space-between;height:100%}.left.svelte-9zy6ic{padding-left:4vh}.right.svelte-9zy6ic{padding-right:4vh
- }footer.svelte-9zy6ic{grid-area:footer}h1.svelte-9zy6ic{color:white;text-transform:uppercase;font-size:1.5rem;font-family:bold;font-weight:100}div.svelte-c2hpa{position:relative}.controls.svelte-c2hpa{position:absolute;top:0;width:100%;transition:opacity 1s}.info.svelte-c2hpa{display:flex;width:100%;justify-content:space-between}span.svelte-c2hpa{padding:0.2em 0.5em;color:white;text-shadow:0 0 8px #000000;font-size:1.4em;opacity:0.7}.time.svelte-c2hpa{width:3em}.time.svelte-c2hpa:last-child{text-align:right
-  }progress.svelte-c2hpa{display:block;width:100%;height:10px;-webkit-appearance:none;appearance:none}progress.svelte-c2hpa::-webkit-progress-bar{background-color:rgba(0, 0, 0, 0.2)}progress.svelte-c2hpa::-webkit-progress-value{background-color:rgba(255, 255, 255, 0.6)}video.svelte-c2hpa{width:100%;box-shadow:0.4rem 0.4rem 1rem 0.01rem #c7c8ca}
+div.svelte-1ulzbbo{position:relative}.controls.svelte-1ulzbbo{position:absolute;top:0;width:100%;transition:opacity 1s}.info.svelte-1ulzbbo{display:flex;width:100%;justify-content:space-between}span.svelte-1ulzbbo{padding:0.2em 0.5em;color:white;text-shadow:0 0 8px #000000;font-size:1.4em;opacity:0.7}.time.svelte-1ulzbbo{width:3em}.time.svelte-1ulzbbo:last-child{text-align:right
+ }progress.svelte-1ulzbbo{display:block;width:100%;height:10px;-webkit-appearance:none;appearance:none}progress.svelte-1ulzbbo::-webkit-progress-bar{background-color:rgba(0, 0, 0, 0.2)}progress.svelte-1ulzbbo::-webkit-progress-value{background-color:rgba(255, 255, 255, 0.6)}img.svelte-1ulzbbo{width:100%;box-shadow:0.4rem 0.4rem 1rem 0.01rem #c7c8ca}/* Project variables */
+
+:root {
+    /*===========\
+    | Typography |
+    \===========*/
+
+    --font: sans-serif;
+    --font-mono: monospace;
+    --font-size: 10px; /*base 10 instead of 16*/
+    --linemax: 42em;
+    --lineheight: 1.5;
+
+    /*=======\
+    | Colour |
+    \=======*/
+
+    /* UofC colours */
+    --primary-red: #d6001c;
+    --primary-gold: #ffcd00;
+    --secondary-light-orange: #ffc300;
+    --secondary-dark-orange: #ff671f;
+    --secondary-rubine: #ed0a72;
+    --secondary-berry: #9c0534;
+    --accent-teal: #47a67c;
+    --accent-light-yellow: #ffe57b;
+    --accent-brown: #6c3302;
+    --accent-taupe: #d3ac8b;
+    --neutral-black: black;
+    --neutral-dark-grey: #6d6e71;
+    --neutral-light-grey: #c7c8ca;
+}
+
+body {
+    width: 100%;
+    height:100%;
+    font: var(--font-size)/var(--lineheight) var(--font);
+    padding: 0px;
+    margin: 0px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "content"
+        "footer"; /* <! -- optional --> */
+    grid-template-columns: 1fr;
+    grid-auto-rows: 60px minmax(640px, auto) 100px;
+
+}
+
+main {
+    grid-area: content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header {
+    grid-area: header;
+    background: var(--primary-red);
+    box-shadow: var(--neutral-dark-grey) 0px -0.4rem 0.9rem 0.2rem;
+    margin: 0 auto;
+    width: 100vw;
+    height: 3rem;
+    font-family: Monospace !important;
+    -webkit-text-stroke: 0.2px !important;
+    text-stroke: 0.2px !important;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height:100%;
+}
+
+.left {
+    padding-left: 4vh;
+}
+
+.right {
+    padding-right: 4vh
+}
+
+footer {
+    grid-area: footer;
+}
+
+h1 {
+    color: white;
+		text-transform: uppercase;
+		font-size: 1.5rem;
+    font-family: bold;
+		font-weight: 100;
+}

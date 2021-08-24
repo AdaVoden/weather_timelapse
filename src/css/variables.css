@@ -1,0 +1,32 @@
+/* Project variables */
+
+:root {
+    /*===========\
+    | Typography |
+    \===========*/
+
+    --font: sans-serif;
+    --font-mono: monospace;
+    --font-size: 10px; /*base 10 instead of 16*/
+    --linemax: 42em;
+    --lineheight: 1.5;
+
+    /*=======\
+    | Colour |
+    \=======*/
+
+    /* UofC colours */
+    --primary-red: #d6001c;
+    --primary-gold: #ffcd00;
+    --secondary-light-orange: #ffc300;
+    --secondary-dark-orange: #ff671f;
+    --secondary-rubine: #ed0a72;
+    --secondary-berry: #9c0534;
+    --accent-teal: #47a67c;
+    --accent-light-yellow: #ffe57b;
+    --accent-brown: #6c3302;
+    --accent-taupe: #d3ac8b;
+    --neutral-black: black;
+    --neutral-dark-grey: #6d6e71;
+    --neutral-light-grey: #c7c8ca;
+}
