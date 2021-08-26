@@ -1,10 +1,13 @@
 <script lang="ts">
  // These values are bound to properties of the video
- import { totalPlaytime, frameRate } from './metadata.ts'
- import { timelapse } from './images.ts'
+ import { writable} from 'svelte/store'
+ import { totalPlaytime, frameRate, latestImage } from './metadata'
+ let paused = true;
  let time = 0;
  let duration = $totalPlaytime;
- let paused = true;
+
+ const millisecondsPerFrame = 1000/$frameRate;
+ const secondsPerFrame = millisecondsPerFrame/1000;
 
  let showControls = true;
  let showControlsTimeout;
@@ -12,7 +15,40 @@
  // Used to track time of last mouse down event
  let lastMouseDown;
 
- async function handleMove(e) {
+ function createTimelapse() {
+     const { subscribe, set, update } = writable("0000.jpg");
+     let interval;
+
+     function play() {
+         interval = setInterval(() => {
+             if (time < duration) {
+                 update(n => nextImageFilename(n, $latestImage));
+                 time = time + secondsPerFrame;
+             };
+         }, millisecondsPerFrame);
+     }
+
+     function pause() {
+         clearInterval(interval);
+     }
+
+     function seek(time: number) {
+         if (time < 0) {time = 0};
+         let seekTo = imageFilenameFromTime(time, duration, $frameRate);
+         set(seekTo);
+     }
+
+     return {
+         subscribe,
+         play: () => play(),
+         pause: () => pause(),
+         seek: (time: number) => seek(time)
+     };
+
+ }
+ const timelapse = createTimelapse();
+
+ function handleMove(e) {
      // Make the controls visible, but fade out after
      // 2.5 seconds of inactivity
      clearTimeout(showControlsTimeout);
@@ -26,7 +62,8 @@
          left,
          right
      } = this.getBoundingClientRect();
-     time = await duration * (clientX - left) / (right - left);
+     time = duration * (clientX - left) / (right - left);
+     timelapse.seek(time);
  }
 
  // we can't rely on the built-in click event, because it fires
@@ -36,9 +73,14 @@
  }
 
  function handleMouseup(e) {
-     if (new Date() - lastMouseDown < 300) {
-         if (paused) paused = false;
-         else paused = true;
+     if (new Date() - lastMouseDown < 300) { //Play on click
+         if (paused) {
+             paused = false
+             timelapse.play()
+         } else {
+             paused = true
+             timelapse.pause()
+         };
      }
 
  }
@@ -52,28 +94,62 @@
 
      return `${minutes}:${seconds}`;
  }
+
+ function imageFilenameFromTime(time: number, totalTime: number, frameRate: number): string {
+     const currentPosFraction = time/totalTime;
+     const totalImages = totalTime * frameRate * 2;
+     const currentImage = currentPosFraction * totalImages;
+     let imageMinutes = parseInt(currentImage % 60);
+     if(imageMinutes % 2 === 1) { // Because one image per two minutes
+         imageMinutes = imageMinutes - 1;
+     }
+     const imageHours = parseInt((currentImage - imageMinutes) / 60);
+     const minuteString = ("" + imageMinutes).padStart(2, "0");
+     const hourString = ("" + imageHours).padStart(2, "0");
+     const imageFilename = hourString + minuteString + ".jpg";
+     return imageFilename;
+ }
+
+ function nextImageFilename(currentImage: string, latestImage: string): string {
+     currentImage = ( currentImage).split(".")[0];
+     latestImage = ( latestImage).split(".")[0];
+     let nextImage = parseInt(currentImage) + 2;
+     let latestImageNum = parseInt(latestImage)
+     let result: string;
+     if (((nextImage - 60) % 100) === 0 && nextImage !== 0) {
+         nextImage -= 60;
+         nextImage += 100;
+     }
+     if (nextImage >= latestImageNum) {
+         nextImage = latestImageNum;
+     }
+     result = "" + nextImage;
+     result = `${result.padStart(4, "0")}.jpg`;
+     return result;
+
+ }
 </script>
 
 <div>
-    <img src="./1038.jpg"
-         draggable="false"
-         on:mousemove={handleMove}
-              on:touchmove|preventDefault={handleMove}
-         on:mousedown={handleMousedown}
-              on:mouseup={handleMouseup} />
+
+    <img draggable="false" src={$timelapse}
+                    on:mousemove={handleMove}
+         on:touchmove|preventDefault={handleMove}
+                    on:mousedown={handleMousedown}
+         on:mouseup={handleMouseup}/>
 
     <div class="controls" style="opacity: {duration && showControls ? 1 : 0}">
-        {#await time then t}
-            {#await duration then d}
-                <progress value="{t/d || 0}" />
 
-                <div class="info">
-                    <span class="time">{format(t)}</span>
-                    <span>click anywhere to {paused ? 'play' : 'pause'} / drag to seek</span>
-                    <span class="time">{format(d)}</span>
-                </div>
-            {/await}
-        {/await}
+        <div class="info">
+            <span class="time">{format(time)}</span>
+            <span>click anywhere to {paused ? 'play' : 'pause'} / drag to seek</span>
+            <span class="time">{format(duration)}</span>
+        </div>
+
+        <progress value="{time/duration || 0}" />
+
+
+
     </div>
 </div>
 
@@ -84,7 +160,7 @@
 
  .controls {
      position: absolute;
-     top: 0;
+     bottom: 0;
      width: 100%;
      transition: opacity 1s;
  }

@@ -4,9 +4,6 @@ var app = (function () {
     'use strict';
 
     function noop() { }
-    function is_promise(value) {
-        return value && typeof value === 'object' && typeof value.then === 'function';
-    }
     function add_location(element, file, line, column, char) {
         element.__svelte_meta = {
             loc: { file, line, column, char }
@@ -71,9 +68,6 @@ var app = (function () {
     function space() {
         return text(' ');
     }
-    function empty() {
-        return text('');
-    }
     function listen(node, event, handler, options) {
         node.addEventListener(event, handler, options);
         return () => node.removeEventListener(event, handler, options);
@@ -106,11 +100,6 @@ var app = (function () {
     let current_component;
     function set_current_component(component) {
         current_component = component;
-    }
-    function get_current_component() {
-        if (!current_component)
-            throw new Error('Function called outside component initialization');
-        return current_component;
     }
 
     const dirty_components = [];
@@ -178,19 +167,6 @@ var app = (function () {
     }
     const outroing = new Set();
     let outros;
-    function group_outros() {
-        outros = {
-            r: 0,
-            c: [],
-            p: outros // parent group
-        };
-    }
-    function check_outros() {
-        if (!outros.r) {
-            run_all(outros.c);
-        }
-        outros = outros.p;
-    }
     function transition_in(block, local) {
         if (block && block.i) {
             outroing.delete(block);
@@ -212,88 +188,6 @@ var app = (function () {
             });
             block.o(local);
         }
-    }
-
-    function handle_promise(promise, info) {
-        const token = info.token = {};
-        function update(type, index, key, value) {
-            if (info.token !== token)
-                return;
-            info.resolved = value;
-            let child_ctx = info.ctx;
-            if (key !== undefined) {
-                child_ctx = child_ctx.slice();
-                child_ctx[key] = value;
-            }
-            const block = type && (info.current = type)(child_ctx);
-            let needs_flush = false;
-            if (info.block) {
-                if (info.blocks) {
-                    info.blocks.forEach((block, i) => {
-                        if (i !== index && block) {
-                            group_outros();
-                            transition_out(block, 1, 1, () => {
-                                if (info.blocks[i] === block) {
-                                    info.blocks[i] = null;
-                                }
-                            });
-                            check_outros();
-                        }
-                    });
-                }
-                else {
-                    info.block.d(1);
-                }
-                block.c();
-                transition_in(block, 1);
-                block.m(info.mount(), info.anchor);
-                needs_flush = true;
-            }
-            info.block = block;
-            if (info.blocks)
-                info.blocks[index] = block;
-            if (needs_flush) {
-                flush();
-            }
-        }
-        if (is_promise(promise)) {
-            const current_component = get_current_component();
-            promise.then(value => {
-                set_current_component(current_component);
-                update(info.then, 1, info.value, value);
-                set_current_component(null);
-            }, error => {
-                set_current_component(current_component);
-                update(info.catch, 2, info.error, error);
-                set_current_component(null);
-                if (!info.hasCatch) {
-                    throw error;
-                }
-            });
-            // if we previously had a then/catch block, destroy it
-            if (info.current !== info.pending) {
-                update(info.pending, 0);
-                return true;
-            }
-        }
-        else {
-            if (info.current !== info.then) {
-                update(info.then, 1, info.value, promise);
-                return true;
-            }
-            info.resolved = promise;
-        }
-    }
-    function update_await_block_branch(info, ctx, dirty) {
-        const child_ctx = ctx.slice();
-        const { resolved } = info;
-        if (info.current === info.then) {
-            child_ctx[info.value] = resolved;
-        }
-        if (info.current === info.catch) {
-            child_ctx[info.error] = resolved;
-        }
-        info.block.p(child_ctx, dirty);
     }
     function create_component(block) {
         block && block.c();
@@ -597,147 +491,68 @@ var app = (function () {
     }
 
     let intervalCheck = 120000; /* 2 minutes */
-    const testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-            resolve('1038');
-        }, 50);
-    });
-    const latestImage = readable(testPromise, function start(set) {
-        const interval = setInterval(() => {
-            set(testPromise);
+    let url = "./lastimage";
+    const frameRate = writable(10);
+    function getLatestFilename(url) {
+        let result;
+        const webReq = new XMLHttpRequest();
+        webReq.open("GET", url, false);
+        webReq.send(null);
+        result = webReq.responseText;
+        return result;
+    }
+    const latestImage = readable(getLatestFilename(url), function start(set) {
+        const interval = setInterval(async () => {
+            set(getLatestFilename(url));
         }, intervalCheck);
         return function stop() {
             clearInterval(interval);
         };
     });
-    async function calculateTotalPlaytime(latestImage, rate) {
-        try {
-            const digits = await latestImage;
-            const minutes = parseInt(digits.slice(1));
-            const hours = parseInt(digits.slice(0, 2));
-            const totalImages = parseFloat((hours * 60 + minutes) / 2);
-            const playTime = totalImages / rate;
-            return playTime;
-        }
-        catch (e) {
-            return 0;
-        }
+    function calculateTotalPlaytime(latestImage, rate) {
+        const digits = latestImage;
+        const minutes = parseInt(digits.slice(1));
+        const hours = parseInt(digits.slice(0, 2));
+        const totalImages = parseFloat((hours * 60 + minutes) / 2);
+        const playTime = totalImages / rate;
+        return playTime;
     }
-    const frameRate = writable(5);
     const totalPlaytime = derived([latestImage, frameRate], ([$latestImage, $frameRate]) => calculateTotalPlaytime($latestImage, $frameRate));
-
-    function timelapse(node) {
-    }
 
     /* src/Player.svelte generated by Svelte v3.42.1 */
     const file$1 = "src/Player.svelte";
 
-    // (1:0) <script lang="ts">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }
-    function create_catch_block_1(ctx) {
-    	const block = { c: noop, m: noop, p: noop, d: noop };
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_catch_block_1.name,
-    		type: "catch",
-    		source: "(1:0) <script lang=\\\"ts\\\">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (68:28)              {#await duration then d}
-    function create_then_block(ctx) {
-    	let await_block_anchor;
-
-    	let info = {
-    		ctx,
-    		current: null,
-    		token: null,
-    		hasCatch: false,
-    		pending: create_pending_block_1,
-    		then: create_then_block_1,
-    		catch: create_catch_block,
-    		value: 12
-    	};
-
-    	handle_promise(/*duration*/ ctx[3], info);
-
-    	const block = {
-    		c: function create() {
-    			await_block_anchor = empty();
-    			info.block.c();
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, await_block_anchor, anchor);
-    			info.block.m(target, info.anchor = anchor);
-    			info.mount = () => await_block_anchor.parentNode;
-    			info.anchor = await_block_anchor;
-    		},
-    		p: function update(new_ctx, dirty) {
-    			ctx = new_ctx;
-    			update_await_block_branch(info, ctx, dirty);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(await_block_anchor);
-    			info.block.d(detaching);
-    			info.token = null;
-    			info = null;
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_then_block.name,
-    		type: "then",
-    		source: "(68:28)              {#await duration then d}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (1:0) <script lang="ts">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }
-    function create_catch_block(ctx) {
-    	const block = { c: noop, m: noop, p: noop, d: noop };
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_catch_block.name,
-    		type: "catch",
-    		source: "(1:0) <script lang=\\\"ts\\\">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (69:36)                  <progress value="{t/d || 0}
-    function create_then_block_1(ctx) {
-    	let progress;
-    	let progress_value_value;
+    function create_fragment$1(ctx) {
+    	let div2;
+    	let img;
+    	let img_src_value;
     	let t0;
-    	let div;
+    	let div1;
+    	let div0;
     	let span0;
-    	let t1_value = format(/*t*/ ctx[11]) + "";
+    	let t1_value = format(/*time*/ ctx[1]) + "";
     	let t1;
     	let t2;
     	let span1;
     	let t3;
-    	let t4_value = (/*paused*/ ctx[1] ? 'play' : 'pause') + "";
+    	let t4_value = (/*paused*/ ctx[0] ? 'play' : 'pause') + "";
     	let t4;
     	let t5;
     	let t6;
     	let span2;
-    	let t7_value = format(/*d*/ ctx[12]) + "";
-    	let t7;
+    	let t8;
+    	let progress;
+    	let progress_value_value;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
-    			progress = element("progress");
+    			div2 = element("div");
+    			img = element("img");
     			t0 = space();
-    			div = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
     			span0 = element("span");
     			t1 = text(t1_value);
     			t2 = space();
@@ -747,172 +562,82 @@ var app = (function () {
     			t5 = text(" / drag to seek");
     			t6 = space();
     			span2 = element("span");
-    			t7 = text(t7_value);
-    			progress.value = progress_value_value = /*t*/ ctx[11] / /*d*/ ctx[12] || 0;
-    			attr_dev(progress, "class", "svelte-1ulzbbo");
-    			add_location(progress, file$1, 69, 16, 2698);
-    			attr_dev(span0, "class", "time svelte-1ulzbbo");
-    			add_location(span0, file$1, 72, 20, 2786);
-    			attr_dev(span1, "class", "svelte-1ulzbbo");
-    			add_location(span1, file$1, 73, 20, 2844);
-    			attr_dev(span2, "class", "time svelte-1ulzbbo");
-    			add_location(span2, file$1, 74, 20, 2938);
-    			attr_dev(div, "class", "info svelte-1ulzbbo");
-    			add_location(div, file$1, 71, 16, 2747);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, progress, anchor);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, div, anchor);
-    			append_dev(div, span0);
-    			append_dev(span0, t1);
-    			append_dev(div, t2);
-    			append_dev(div, span1);
-    			append_dev(span1, t3);
-    			append_dev(span1, t4);
-    			append_dev(span1, t5);
-    			append_dev(div, t6);
-    			append_dev(div, span2);
-    			append_dev(span2, t7);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*time*/ 1 && progress_value_value !== (progress_value_value = /*t*/ ctx[11] / /*d*/ ctx[12] || 0)) {
-    				prop_dev(progress, "value", progress_value_value);
-    			}
-
-    			if (dirty & /*time*/ 1 && t1_value !== (t1_value = format(/*t*/ ctx[11]) + "")) set_data_dev(t1, t1_value);
-    			if (dirty & /*paused*/ 2 && t4_value !== (t4_value = (/*paused*/ ctx[1] ? 'play' : 'pause') + "")) set_data_dev(t4, t4_value);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(progress);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_then_block_1.name,
-    		type: "then",
-    		source: "(69:36)                  <progress value=\\\"{t/d || 0}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (1:0) <script lang="ts">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }
-    function create_pending_block_1(ctx) {
-    	const block = { c: noop, m: noop, p: noop, d: noop };
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_pending_block_1.name,
-    		type: "pending",
-    		source: "(1:0) <script lang=\\\"ts\\\">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (1:0) <script lang="ts">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }
-    function create_pending_block(ctx) {
-    	const block = { c: noop, m: noop, p: noop, d: noop };
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_pending_block.name,
-    		type: "pending",
-    		source: "(1:0) <script lang=\\\"ts\\\">var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$1(ctx) {
-    	let div1;
-    	let img;
-    	let img_src_value;
-    	let t;
-    	let div0;
-    	let promise;
-    	let mounted;
-    	let dispose;
-
-    	let info = {
-    		ctx,
-    		current: null,
-    		token: null,
-    		hasCatch: false,
-    		pending: create_pending_block,
-    		then: create_then_block,
-    		catch: create_catch_block_1,
-    		value: 11
-    	};
-
-    	handle_promise(promise = /*time*/ ctx[0], info);
-
-    	const block = {
-    		c: function create() {
-    			div1 = element("div");
-    			img = element("img");
-    			t = space();
-    			div0 = element("div");
-    			info.block.c();
-    			if (!src_url_equal(img.src, img_src_value = "./1038.jpg")) attr_dev(img, "src", img_src_value);
+    			span2.textContent = `${format(/*duration*/ ctx[4])}`;
+    			t8 = space();
+    			progress = element("progress");
     			attr_dev(img, "draggable", "false");
-    			attr_dev(img, "class", "svelte-1ulzbbo");
-    			add_location(img, file$1, 59, 4, 2313);
-    			attr_dev(div0, "class", "controls svelte-1ulzbbo");
-    			set_style(div0, "opacity", /*duration*/ ctx[3] && /*showControls*/ ctx[2] ? 1 : 0);
-    			add_location(div0, file$1, 66, 4, 2541);
-    			attr_dev(div1, "class", "svelte-1ulzbbo");
-    			add_location(div1, file$1, 58, 0, 2303);
+    			if (!src_url_equal(img.src, img_src_value = /*$timelapse*/ ctx[3])) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "class", "svelte-13cfdq");
+    			add_location(img, file$1, 119, 4, 3798);
+    			attr_dev(span0, "class", "time svelte-13cfdq");
+    			add_location(span0, file$1, 128, 12, 4143);
+    			attr_dev(span1, "class", "svelte-13cfdq");
+    			add_location(span1, file$1, 129, 12, 4196);
+    			attr_dev(span2, "class", "time svelte-13cfdq");
+    			add_location(span2, file$1, 130, 12, 4282);
+    			attr_dev(div0, "class", "info svelte-13cfdq");
+    			add_location(div0, file$1, 127, 8, 4112);
+    			progress.value = progress_value_value = /*time*/ ctx[1] / /*duration*/ ctx[4] || 0;
+    			attr_dev(progress, "class", "svelte-13cfdq");
+    			add_location(progress, file$1, 133, 8, 4351);
+    			attr_dev(div1, "class", "controls svelte-13cfdq");
+    			set_style(div1, "opacity", /*duration*/ ctx[4] && /*showControls*/ ctx[2] ? 1 : 0);
+    			add_location(div1, file$1, 125, 4, 4028);
+    			attr_dev(div2, "class", "svelte-13cfdq");
+    			add_location(div2, file$1, 117, 0, 3787);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, img);
-    			append_dev(div1, t);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, img);
+    			append_dev(div2, t0);
+    			append_dev(div2, div1);
     			append_dev(div1, div0);
-    			info.block.m(div0, info.anchor = null);
-    			info.mount = () => div0;
-    			info.anchor = null;
+    			append_dev(div0, span0);
+    			append_dev(span0, t1);
+    			append_dev(div0, t2);
+    			append_dev(div0, span1);
+    			append_dev(span1, t3);
+    			append_dev(span1, t4);
+    			append_dev(span1, t5);
+    			append_dev(div0, t6);
+    			append_dev(div0, span2);
+    			append_dev(div1, t8);
+    			append_dev(div1, progress);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(img, "mousemove", /*handleMove*/ ctx[4], false, false, false),
-    					listen_dev(img, "touchmove", prevent_default(/*handleMove*/ ctx[4]), false, true, false),
-    					listen_dev(img, "mousedown", /*handleMousedown*/ ctx[5], false, false, false),
-    					listen_dev(img, "mouseup", /*handleMouseup*/ ctx[6], false, false, false)
+    					listen_dev(img, "mousemove", /*handleMove*/ ctx[6], false, false, false),
+    					listen_dev(img, "touchmove", prevent_default(/*handleMove*/ ctx[6]), false, true, false),
+    					listen_dev(img, "mousedown", /*handleMousedown*/ ctx[7], false, false, false),
+    					listen_dev(img, "mouseup", /*handleMouseup*/ ctx[8], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
-    		p: function update(new_ctx, [dirty]) {
-    			ctx = new_ctx;
-    			info.ctx = ctx;
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*$timelapse*/ 8 && !src_url_equal(img.src, img_src_value = /*$timelapse*/ ctx[3])) {
+    				attr_dev(img, "src", img_src_value);
+    			}
 
-    			if (dirty & /*time*/ 1 && promise !== (promise = /*time*/ ctx[0]) && handle_promise(promise, info)) ; else {
-    				update_await_block_branch(info, ctx, dirty);
+    			if (dirty & /*time*/ 2 && t1_value !== (t1_value = format(/*time*/ ctx[1]) + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*paused*/ 1 && t4_value !== (t4_value = (/*paused*/ ctx[0] ? 'play' : 'pause') + "")) set_data_dev(t4, t4_value);
+
+    			if (dirty & /*time*/ 2 && progress_value_value !== (progress_value_value = /*time*/ ctx[1] / /*duration*/ ctx[4] || 0)) {
+    				prop_dev(progress, "value", progress_value_value);
     			}
 
     			if (dirty & /*showControls*/ 4) {
-    				set_style(div0, "opacity", /*duration*/ ctx[3] && /*showControls*/ ctx[2] ? 1 : 0);
+    				set_style(div1, "opacity", /*duration*/ ctx[4] && /*showControls*/ ctx[2] ? 1 : 0);
     			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
-    			info.block.d();
-    			info.token = null;
-    			info = null;
+    			if (detaching) detach_dev(div2);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -937,76 +662,130 @@ var app = (function () {
     	return `${minutes}:${seconds}`;
     }
 
+    function imageFilenameFromTime(time, totalTime, frameRate) {
+    	const currentPosFraction = time / totalTime;
+    	const totalImages = totalTime * frameRate * 2;
+    	const currentImage = currentPosFraction * totalImages;
+    	let imageMinutes = parseInt(currentImage % 60);
+
+    	if (imageMinutes % 2 === 1) {
+    		// Because one image per two minutes
+    		imageMinutes = imageMinutes - 1;
+    	}
+
+    	const imageHours = parseInt((currentImage - imageMinutes) / 60);
+    	const minuteString = ("" + imageMinutes).padStart(2, "0");
+    	const hourString = ("" + imageHours).padStart(2, "0");
+    	const imageFilename = hourString + minuteString + ".jpg";
+    	return imageFilename;
+    }
+
+    function nextImageFilename(currentImage, latestImage) {
+    	currentImage = currentImage.split(".")[0];
+    	latestImage = latestImage.split(".")[0];
+    	let nextImage = parseInt(currentImage) + 2;
+    	let latestImageNum = parseInt(latestImage);
+    	let result;
+
+    	if ((nextImage - 60) % 100 === 0 && nextImage !== 0) {
+    		nextImage -= 60;
+    		nextImage += 100;
+    	}
+
+    	if (nextImage >= latestImageNum) {
+    		nextImage = latestImageNum;
+    	}
+
+    	result = "" + nextImage;
+    	result = `${result.padStart(4, "0")}.jpg`;
+    	return result;
+    }
+
     function instance$1($$self, $$props, $$invalidate) {
+    	let $frameRate;
+    	let $latestImage;
     	let $totalPlaytime;
+    	let $timelapse;
+    	validate_store(frameRate, 'frameRate');
+    	component_subscribe($$self, frameRate, $$value => $$invalidate(11, $frameRate = $$value));
+    	validate_store(latestImage, 'latestImage');
+    	component_subscribe($$self, latestImage, $$value => $$invalidate(12, $latestImage = $$value));
     	validate_store(totalPlaytime, 'totalPlaytime');
-    	component_subscribe($$self, totalPlaytime, $$value => $$invalidate(9, $totalPlaytime = $$value));
+    	component_subscribe($$self, totalPlaytime, $$value => $$invalidate(13, $totalPlaytime = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Player', slots, []);
-
-    	var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
-    		function adopt(value) {
-    			return value instanceof P
-    			? value
-    			: new P(function (resolve) {
-    						resolve(value);
-    					});
-    		}
-
-    		return new (P || (P = Promise))(function (resolve, reject) {
-    				function fulfilled(value) {
-    					try {
-    						step(generator.next(value));
-    					} catch(e) {
-    						reject(e);
-    					}
-    				}
-
-    				function rejected(value) {
-    					try {
-    						step(generator["throw"](value));
-    					} catch(e) {
-    						reject(e);
-    					}
-    				}
-
-    				function step(result) {
-    					result.done
-    					? resolve(result.value)
-    					: adopt(result.value).then(fulfilled, rejected);
-    				}
-
-    				step((generator = generator.apply(thisArg, _arguments || [])).next());
-    			});
-    	};
-
+    	let paused = true;
     	let time = 0;
     	let duration = $totalPlaytime;
-    	let paused = true;
+    	const millisecondsPerFrame = 1000 / $frameRate;
+    	const secondsPerFrame = millisecondsPerFrame / 1000;
     	let showControls = true;
     	let showControlsTimeout;
 
     	// Used to track time of last mouse down event
     	let lastMouseDown;
 
+    	function createTimelapse() {
+    		const { subscribe, set, update } = writable("0000.jpg");
+    		let interval;
+
+    		function play() {
+    			interval = setInterval(
+    				() => {
+    					if (time < duration) {
+    						update(n => nextImageFilename(n, $latestImage));
+    						$$invalidate(1, time = time + secondsPerFrame);
+    					}
+
+    					
+    				},
+    				millisecondsPerFrame
+    			);
+    		}
+
+    		function pause() {
+    			clearInterval(interval);
+    		}
+
+    		function seek(time) {
+    			if (time < 0) {
+    				time = 0;
+    			}
+
+    			
+    			let seekTo = imageFilenameFromTime(time, duration, $frameRate);
+    			set(seekTo);
+    		}
+
+    		return {
+    			subscribe,
+    			play: () => play(),
+    			pause: () => pause(),
+    			seek: time => seek(time)
+    		};
+    	}
+
+    	const timelapse = createTimelapse();
+    	validate_store(timelapse, 'timelapse');
+    	component_subscribe($$self, timelapse, value => $$invalidate(3, $timelapse = value));
+
     	function handleMove(e) {
-    		return __awaiter(this, void 0, void 0, function* () {
-    			// Make the controls visible, but fade out after
-    			// 2.5 seconds of inactivity
-    			clearTimeout(showControlsTimeout);
+    		// Make the controls visible, but fade out after
+    		// 2.5 seconds of inactivity
+    		clearTimeout(showControlsTimeout);
 
-    			showControlsTimeout = setTimeout(() => $$invalidate(2, showControls = false), 2500);
-    			$$invalidate(2, showControls = true);
-    			if (!duration) return; // video not loaded yet
-    			if (e.type !== 'touchmove' && !(e.buttons & 1)) return; // mouse not down
+    		showControlsTimeout = setTimeout(() => $$invalidate(2, showControls = false), 2500);
+    		$$invalidate(2, showControls = true);
+    		if (!duration) return; // video not loaded yet
+    		if (e.type !== 'touchmove' && !(e.buttons & 1)) return; // mouse not down
 
-    			const clientX = e.type === 'touchmove'
-    			? e.touches[0].clientX
-    			: e.clientX;
+    		const clientX = e.type === 'touchmove'
+    		? e.touches[0].clientX
+    		: e.clientX;
 
-    			const { left, right } = this.getBoundingClientRect();
-    			$$invalidate(0, time = (yield duration) * (clientX - left) / (right - left));
-    		});
+    		const { left, right } = this.getBoundingClientRect();
+    		$$invalidate(1, time = duration * (clientX - left) / (right - left));
+    		timelapse.seek(time);
     	}
 
     	// we can't rely on the built-in click event, because it fires
@@ -1017,7 +796,16 @@ var app = (function () {
 
     	function handleMouseup(e) {
     		if (new Date() - lastMouseDown < 300) {
-    			if (paused) $$invalidate(1, paused = false); else $$invalidate(1, paused = true);
+    			//Play on click
+    			if (paused) {
+    				$$invalidate(0, paused = false);
+    				timelapse.play();
+    			} else {
+    				$$invalidate(0, paused = true);
+    				timelapse.pause();
+    			}
+
+    			
     		}
     	}
 
@@ -1028,28 +816,36 @@ var app = (function () {
     	});
 
     	$$self.$capture_state = () => ({
-    		__awaiter,
+    		writable,
     		totalPlaytime,
     		frameRate,
-    		timelapse,
+    		latestImage,
+    		paused,
     		time,
     		duration,
-    		paused,
+    		millisecondsPerFrame,
+    		secondsPerFrame,
     		showControls,
     		showControlsTimeout,
     		lastMouseDown,
+    		createTimelapse,
+    		timelapse,
     		handleMove,
     		handleMousedown,
     		handleMouseup,
     		format,
-    		$totalPlaytime
+    		imageFilenameFromTime,
+    		nextImageFilename,
+    		$frameRate,
+    		$latestImage,
+    		$totalPlaytime,
+    		$timelapse
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('__awaiter' in $$props) __awaiter = $$props.__awaiter;
-    		if ('time' in $$props) $$invalidate(0, time = $$props.time);
-    		if ('duration' in $$props) $$invalidate(3, duration = $$props.duration);
-    		if ('paused' in $$props) $$invalidate(1, paused = $$props.paused);
+    		if ('paused' in $$props) $$invalidate(0, paused = $$props.paused);
+    		if ('time' in $$props) $$invalidate(1, time = $$props.time);
+    		if ('duration' in $$props) $$invalidate(4, duration = $$props.duration);
     		if ('showControls' in $$props) $$invalidate(2, showControls = $$props.showControls);
     		if ('showControlsTimeout' in $$props) showControlsTimeout = $$props.showControlsTimeout;
     		if ('lastMouseDown' in $$props) lastMouseDown = $$props.lastMouseDown;
@@ -1060,10 +856,12 @@ var app = (function () {
     	}
 
     	return [
-    		time,
     		paused,
+    		time,
     		showControls,
+    		$timelapse,
     		duration,
+    		timelapse,
     		handleMove,
     		handleMousedown,
     		handleMouseup
@@ -1088,75 +886,77 @@ var app = (function () {
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
+    	let link;
+    	let t0;
     	let header;
-    	let div2;
     	let div0;
     	let h10;
-    	let t1;
+    	let t2;
     	let div1;
     	let h11;
-    	let t3;
-    	let div4;
-    	let main;
-    	let div3;
-    	let player;
     	let t4;
+    	let main;
+    	let div2;
+    	let player;
+    	let t5;
     	let footer;
     	let current;
     	player = new Player({ $$inline: true });
 
     	const block = {
     		c: function create() {
+    			link = element("link");
+    			t0 = space();
     			header = element("header");
-    			div2 = element("div");
     			div0 = element("div");
     			h10 = element("h1");
     			h10.textContent = "Rothney Astrophysical Observatory";
-    			t1 = space();
+    			t2 = space();
     			div1 = element("div");
     			h11 = element("h1");
     			h11.textContent = "Weather Timelapse";
-    			t3 = space();
-    			div4 = element("div");
-    			main = element("main");
-    			div3 = element("div");
-    			create_component(player.$$.fragment);
     			t4 = space();
+    			main = element("main");
+    			div2 = element("div");
+    			create_component(player.$$.fragment);
+    			t5 = space();
     			footer = element("footer");
-    			add_location(h10, file, 9, 16, 248);
+    			attr_dev(link, "rel", "icon");
+    			attr_dev(link, "type", "image/x-icon");
+    			attr_dev(link, "href", "/favicon.ico");
+    			add_location(link, file, 6, 4, 168);
+    			add_location(h10, file, 11, 12, 319);
     			attr_dev(div0, "class", "left");
-    			add_location(div0, file, 8, 12, 213);
-    			add_location(h11, file, 13, 16, 379);
+    			add_location(div0, file, 10, 8, 288);
+    			add_location(h11, file, 15, 12, 438);
     			attr_dev(div1, "class", "right");
-    			add_location(div1, file, 12, 12, 343);
-    			attr_dev(div2, "class", "flex-container");
-    			add_location(div2, file, 7, 8, 172);
-    			add_location(header, file, 6, 4, 155);
-    			attr_dev(div3, "class", "player");
-    			add_location(div3, file, 19, 8, 560);
-    			add_location(main, file, 18, 4, 545);
-    			add_location(footer, file, 24, 4, 635);
-    			attr_dev(div4, "class", "grid-container");
-    			add_location(div4, file, 17, 4, 511);
+    			add_location(div1, file, 14, 8, 406);
+    			attr_dev(header, "class", "flex-container row");
+    			add_location(header, file, 9, 0, 244);
+    			attr_dev(div2, "class", "player");
+    			add_location(div2, file, 21, 8, 591);
+    			attr_dev(main, "class", "flex-container column");
+    			add_location(main, file, 20, 4, 546);
+    			add_location(footer, file, 25, 4, 665);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
+    			append_dev(document.head, link);
+    			insert_dev(target, t0, anchor);
     			insert_dev(target, header, anchor);
-    			append_dev(header, div2);
-    			append_dev(div2, div0);
+    			append_dev(header, div0);
     			append_dev(div0, h10);
-    			append_dev(div2, t1);
-    			append_dev(div2, div1);
+    			append_dev(header, t2);
+    			append_dev(header, div1);
     			append_dev(div1, h11);
-    			insert_dev(target, t3, anchor);
-    			insert_dev(target, div4, anchor);
-    			append_dev(div4, main);
-    			append_dev(main, div3);
-    			mount_component(player, div3, null);
-    			append_dev(div4, t4);
-    			append_dev(div4, footer);
+    			insert_dev(target, t4, anchor);
+    			insert_dev(target, main, anchor);
+    			append_dev(main, div2);
+    			mount_component(player, div2, null);
+    			insert_dev(target, t5, anchor);
+    			insert_dev(target, footer, anchor);
     			current = true;
     		},
     		p: noop,
@@ -1170,10 +970,14 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
+    			detach_dev(link);
+    			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(header);
-    			if (detaching) detach_dev(t3);
-    			if (detaching) detach_dev(div4);
+    			if (detaching) detach_dev(t4);
+    			if (detaching) detach_dev(main);
     			destroy_component(player);
+    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(footer);
     		}
     	};
 
