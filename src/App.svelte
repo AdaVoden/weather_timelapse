@@ -5,6 +5,7 @@
  import Player from './Player.svelte';
 </script>
 <svelte:head>
+    <title> Weather Timelapse </title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </svelte:head>
 

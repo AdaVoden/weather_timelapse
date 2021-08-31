@@ -921,23 +921,24 @@ var app = (function () {
     			create_component(player.$$.fragment);
     			t5 = space();
     			footer = element("footer");
+    			document.title = " Weather Timelapse ";
     			attr_dev(link, "rel", "icon");
     			attr_dev(link, "type", "image/x-icon");
     			attr_dev(link, "href", "/favicon.ico");
-    			add_location(link, file, 6, 4, 168);
-    			add_location(h10, file, 11, 12, 319);
+    			add_location(link, file, 7, 4, 207);
+    			add_location(h10, file, 12, 12, 358);
     			attr_dev(div0, "class", "left");
-    			add_location(div0, file, 10, 8, 288);
-    			add_location(h11, file, 15, 12, 438);
+    			add_location(div0, file, 11, 8, 327);
+    			add_location(h11, file, 16, 12, 477);
     			attr_dev(div1, "class", "right");
-    			add_location(div1, file, 14, 8, 406);
+    			add_location(div1, file, 15, 8, 445);
     			attr_dev(header, "class", "flex-container row");
-    			add_location(header, file, 9, 0, 244);
+    			add_location(header, file, 10, 0, 283);
     			attr_dev(div2, "class", "player");
-    			add_location(div2, file, 21, 8, 591);
+    			add_location(div2, file, 22, 8, 630);
     			attr_dev(main, "class", "flex-container column");
-    			add_location(main, file, 20, 4, 546);
-    			add_location(footer, file, 25, 4, 665);
+    			add_location(main, file, 21, 4, 585);
+    			add_location(footer, file, 26, 4, 704);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
