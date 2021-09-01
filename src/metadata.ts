@@ -1,6 +1,6 @@
 import { readable, derived, writable } from 'svelte/store';
 let intervalCheck: number = 120000; /* 2 minutes */
-let url: string = "images/WeatherCamImages/lastimage"
+let url: string = "/images/WeatherCamImages/lastimage"
 
 export const frameRate = writable(10)
 
