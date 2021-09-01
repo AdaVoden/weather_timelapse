@@ -1,13 +1,15 @@
+<svelte:head>
+    <title> Weather Timelapse </title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+</svelte:head>
+
 <script lang="ts">
  export let latestImageURL: string;
  import "./css/variables.css";
  import "./css/master.css";
  import Player from './Player.svelte';
 </script>
-<svelte:head>
-    <title> Weather Timelapse </title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-</svelte:head>
+
 
 <header class="flex-container row">
         <div class="left">

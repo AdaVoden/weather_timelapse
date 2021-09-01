@@ -2,6 +2,7 @@
  // These values are bound to properties of the video
  import { writable} from 'svelte/store'
  import { totalPlaytime, frameRate, latestImage } from './metadata'
+ let baseURL = "/images/WeatherCamImages/"
  let paused = true;
  let time = 0;
  let duration = $totalPlaytime;
@@ -16,7 +17,7 @@
  let lastMouseDown;
 
  function createTimelapse() {
-     const { subscribe, set, update } = writable("0000.jpg");
+     const { subscribe, set, update } = writable(baseURL + "0000.jpg");
      let interval;
 
      function play() {
@@ -34,7 +35,7 @@
 
      function seek(time: number) {
          if (time < 0) {time = 0};
-         let seekTo = imageFilenameFromTime(time, duration, $frameRate);
+         let seekTo = baseURL + imageFilenameFromTime(time, duration, $frameRate);
          set(seekTo);
      }
 
@@ -111,6 +112,8 @@
  }
 
  function nextImageFilename(currentImage: string, latestImage: string): string {
+     currentImage = currentImage.split("/").at(-1);
+     console.log(currentImage);
      currentImage = ( currentImage).split(".")[0];
      latestImage = ( latestImage).split(".")[0];
      let nextImage = parseInt(currentImage) + 2;
@@ -124,7 +127,7 @@
          nextImage = latestImageNum;
      }
      result = "" + nextImage;
-     result = `${result.padStart(4, "0")}.jpg`;
+     result = `${baseURL}${result.padStart(4, "0")}.jpg`;
      return result;
 
  }
