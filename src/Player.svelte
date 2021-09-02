@@ -1,11 +1,23 @@
 <script lang="ts">
  // These values are bound to properties of the video
  import { writable} from 'svelte/store'
- import { totalPlaytime, frameRate, latestImage } from './metadata'
- let baseURL = "/images/WeatherCamImages/"
- let paused = true;
+ import { totalPlaytimeFromStores, frameRate, latestImageFromURL } from './metadata'
+ export let allsky = false;
+ let baseURL = "/images/";
+ let url: string;
+ let totalPlaytime;
+ let latestImage;
+ let timelapse;
  let time = 0;
- let duration = $totalPlaytime;
+ let paused = true;
+ let duration: number;
+ $: if (allsky) {
+     setupTimelapse("AllSkyCamImages");
+
+ } else {
+     setupTimelapse("WeatherCamImages");
+
+ }
 
  const millisecondsPerFrame = 1000/$frameRate;
  const secondsPerFrame = millisecondsPerFrame/1000;
@@ -16,8 +28,25 @@
  // Used to track time of last mouse down event
  let lastMouseDown;
 
+ function setupTimelapse(imageFolder: string) {
+     if (typeof timelapse !== 'undefined') {
+         timelapse.pause();
+
+         paused = true;
+     }
+     url = baseURL + imageFolder + "/";
+
+     latestImage = latestImageFromURL(url + "lastimage");
+
+     totalPlaytime = totalPlaytimeFromStores(latestImage, frameRate);
+     duration = $totalPlaytime;
+     time = 0;
+
+     timelapse = createTimelapse();
+ }
+
  function createTimelapse() {
-     const { subscribe, set, update } = writable(baseURL + "0000.jpg");
+     const { subscribe, set, update } = writable(url + "0000.jpg");
      let interval;
 
      function play() {
@@ -35,7 +64,7 @@
 
      function seek(time: number) {
          if (time < 0) {time = 0};
-         let seekTo = baseURL + imageFilenameFromTime(time, duration, $frameRate);
+         let seekTo = url + imageFilenameFromTime(time, duration, $frameRate);
          set(seekTo);
      }
 
@@ -47,7 +76,7 @@
      };
 
  }
- const timelapse = createTimelapse();
+
 
  function handleMove(e) {
      // Make the controls visible, but fade out after
@@ -127,7 +156,7 @@
          nextImage = latestImageNum;
      }
      result = "" + nextImage;
-     result = `${baseURL}${result.padStart(4, "0")}.jpg`;
+     result = `${url}${result.padStart(4, "0")}.jpg`;
      return result;
 
  }
@@ -139,7 +168,8 @@
                     on:mousemove={handleMove}
          on:touchmove|preventDefault={handleMove}
                     on:mousedown={handleMousedown}
-         on:mouseup={handleMouseup}/>
+         on:mouseup={handleMouseup}
+    alt="Timelapse" />
 
     <div class="controls" style="opacity: {duration && showControls ? 1 : 0}">
 

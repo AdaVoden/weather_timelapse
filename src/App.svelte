@@ -1,13 +1,9 @@
-<svelte:head>
-    <title> Weather Timelapse </title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-</svelte:head>
-
 <script lang="ts">
- export let latestImageURL: string;
  import "./css/variables.css";
  import "./css/master.css";
  import Player from './Player.svelte';
+ let toggle: boolean = false;
+
 </script>
 
 
@@ -24,7 +20,16 @@
 
     <main class="flex-container column">
         <div class="player">
-            <Player/>
+            <Player allsky={toggle} />
+        </div>
+        <div class="toggle">
+            <input type="checkbox" bind:checked={toggle} name="allsky" />
+            <label for="allsky">{toggle ? "All Sky" : "Weather"}
         </div>
     </main>
     <footer></footer>
+
+    <style>
+
+
+    </style>

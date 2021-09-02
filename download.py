@@ -1,6 +1,6 @@
 import requests
 
-base_url = "http://136.159.57.131/weatherimages"
+base_url = "https://cam01.sci.ucalgary.ca/images/AllSkyCamImages"
 suffix = ".jpg"
 num = 0
 while num <= 1038:
@@ -13,7 +13,7 @@ while num <= 1038:
     print(f"Downloading file {url}")
     filedata = requests.get(url)
     datatowrite = filedata.content
-    with open("/home/voden/Downloads/weatherimages/" + file_name, "wb") as f:
+    with open("/home/voden/Downloads/AllSkyCamImages/" + file_name, "wb") as f:
         print(filedata)
         f.write(datatowrite)
     num += 2
