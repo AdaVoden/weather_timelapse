@@ -498,7 +498,7 @@ var app = (function () {
 
     let intervalCheck = 120000; /* 2 minutes */
     let url = "/images/WeatherCamImages/lastimage";
-    const frameRate = writable(10);
+    const frameRate = writable(5);
     function getLatestFilename(url) {
         let result;
         const webReq = new XMLHttpRequest();
@@ -517,9 +517,9 @@ var app = (function () {
     });
     function calculateTotalPlaytime(latestImage, rate) {
         const digits = latestImage;
-        const minutes = parseInt(digits.slice(1));
-        const hours = parseInt(digits.slice(0, 2));
-        const totalImages = parseFloat((hours * 60 + minutes) / 2);
+        const minutes = parseFloat(digits.slice(2));
+        const hours = parseFloat(digits.slice(0, 2));
+        const totalImages = parseFloat((hours * 30) + (minutes / 2));
         const playTime = totalImages / rate;
         return playTime;
     }
