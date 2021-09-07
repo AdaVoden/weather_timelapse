@@ -12,10 +12,10 @@
  let paused = true;
  let duration: number;
  $: if (allsky) {
-     setupTimelapse("AllSkyCamImages");
+     setupTimelapse("AllSkyCamImages", 1200);
 
  } else {
-     setupTimelapse("WeatherCamImages");
+     setupTimelapse("WeatherCamImages", 0);
 
  }
 
@@ -28,7 +28,7 @@
  // Used to track time of last mouse down event
  let lastMouseDown;
 
- function setupTimelapse(imageFolder: string) {
+ function setupTimelapse(imageFolder: string, startPoint: number) {
      if (typeof timelapse !== 'undefined') {
          timelapse.pause();
 
@@ -38,15 +38,15 @@
 
      latestImage = latestImageFromURL(url + "lastimage");
 
-     totalPlaytime = totalPlaytimeFromStores(latestImage, frameRate);
+     totalPlaytime = totalPlaytimeFromStores(latestImage, frameRate, startPoint);
      duration = $totalPlaytime;
      time = 0;
-
-     timelapse = createTimelapse();
+     let startFilename = imageFilenameFromNumber(startPoint);
+     timelapse = createTimelapse(startFilename);
  }
 
- function createTimelapse() {
-     const { subscribe, set, update } = writable(url + "0000.jpg");
+ function createTimelapse(startPoint: number) {
+     const { subscribe, set, update } = writable(url + startPoint);
      let interval;
 
      function play() {
@@ -104,14 +104,14 @@
 
  function handleMouseup(e) {
      if (new Date() - lastMouseDown < 300) { //Play on click
-         if (paused) {
-             paused = false
-             timelapse.play()
-         } else {
-             paused = true
-             timelapse.pause()
-         };
-     }
+                                           if (paused) {
+                                               paused = false
+                                               timelapse.play()
+                                           } else {
+                                               paused = true
+                                               timelapse.pause()
+                                           };
+                                           }
 
  }
 
@@ -130,7 +130,8 @@
      const totalImages = totalTime * frameRate * 2;
      const currentImage = currentPosFraction * totalImages;
      let imageMinutes = parseInt(currentImage % 60);
-     if(imageMinutes % 2 === 1) { // Because one image per two minutes
+     if(imageMinutes % 2 === 1) {
+         // Because one image per two minutes
          imageMinutes = imageMinutes - 1;
      }
      const imageHours = parseInt((currentImage - imageMinutes) / 60);
@@ -142,23 +143,33 @@
 
  function nextImageFilename(currentImage: string, latestImage: string): string {
      currentImage = currentImage.split("/").at(-1);
-     console.log(currentImage);
+     // Just in case we're passed in full URLs
      currentImage = ( currentImage).split(".")[0];
      latestImage = ( latestImage).split(".")[0];
      let nextImage = parseInt(currentImage) + 2;
      let latestImageNum = parseInt(latestImage)
      let result: string;
      if (((nextImage - 60) % 100) === 0 && nextImage !== 0) {
+         // To increment hour instead of using impossible time
          nextImage -= 60;
          nextImage += 100;
      }
      if (nextImage >= latestImageNum) {
+         // Never go past latest image
          nextImage = latestImageNum;
      }
-     result = "" + nextImage;
-     result = `${url}${result.padStart(4, "0")}.jpg`;
+     if (nextImage > 2400) {
+         // Reset just in case
+         nextImage = 0;
+     }
+     let resultNumber = imageFilenameFromNumber(nextImage);
+     result = `${url}${resultNumber}`
      return result;
-
+ }
+ function imageFilenameFromNumber(imageNumber: number){
+     let filename = String(imageNumber);
+     filename = `${filename.padStart(4, "0")}.jpg`;
+     return filename;
  }
 </script>
 

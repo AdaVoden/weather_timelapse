@@ -8,7 +8,7 @@ function getLatestFilename(url: string): string {
   const webReq = new XMLHttpRequest();
   webReq.open("GET", url, false);
   webReq.send(null);
-    result = webReq.responseText;
+  result = webReq.responseText;
   return result
 }
 
@@ -26,19 +26,21 @@ export function latestImageFromURL(url: string) {
 }
 
 
-function calculateTotalPlaytime(latestImage: string, rate: number) {
-  const digits = latestImage
-  const minutes = parseFloat(digits.slice(2));
-  const hours = parseFloat(digits.slice(0, 2));
-  const totalImages: number = parseFloat((hours * 30) + (minutes / 2));
+function calculateTotalPlaytime(latestImage: string, rate: number, startTime: number): number {
+  const digits = latestImage.slice(0, 4);
+  const latestTime = parseFloat(digits);
+  const totalTime = latestTime - startTime;
+  const minutes = parseInt(totalTime % 60);
+  const hours = parseInt((totalTime - minutes) / 60);
+  const totalImages = (hours * 30) + (minutes / 2);
   const playTime = totalImages / rate;
   return playTime;
 
 }
-export function totalPlaytimeFromStores(latestImage, frameRate) {
+export function totalPlaytimeFromStores(latestImage, frameRate, startTime: number) {
   return derived(
     [latestImage, frameRate],
-    ([$latestImage, $frameRate]) => calculateTotalPlaytime($latestImage, $frameRate)
+    ([$latestImage, $frameRate]) => calculateTotalPlaytime($latestImage, $frameRate, startTime)
   );
 }
 
