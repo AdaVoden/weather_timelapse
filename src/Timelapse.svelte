@@ -1,11 +1,13 @@
 <script lang="ts">
  import { writable } from 'svelte/store'
  import { totalPlaytimeFromStores, frameRate, latestImageFromURL } from './metadata.ts'
- export let paused;
- export let time = 0;
+ export let paused = true;
+ export let time;
  export let allsky;
  export let totalPlaytime;
  let baseURL = "/images";
+ let allSkyFolder = "AllSkyCamImages";
+ let weatherFolder = "WeatherCamImages";
  let url;
  let playStartTime;
  let latestImage;
@@ -16,19 +18,19 @@
  // Before mounting setup
  if (allsky) {
      playStartTime = 1200;
-     setupTimelapse("AllSkyCamImages", playStartTime);
+     setupTimelapse(allSkyFolder, playStartTime);
  } else {
-     playStartTime = 0;
-     setupTimelapse("WeatherCamImages", playStartTime);
+     playStartTime = 500;
+     setupTimelapse(weatherFolder, playStartTime);
  }
 
 
  $: if (allsky) {
-     setupTimelapseVariables("AllSkyCamImages", 1200);
+     setupTimelapseVariables(allSkyFolder, 1200);
      timelapse.resetStartPoint();
 
  } else {
-     setupTimelapseVariables("WeatherCamImages", 0);
+     setupTimelapseVariables(weatherFolder, 500);
      timelapse.resetStartPoint();
  }
 
@@ -68,9 +70,9 @@
      num = roundToEven(num);
      const digits = String(num).split('');
      if (digits.length >= 2) {
-         digits.pop(); // get rid of minutes
-         const hours = digits.pop();
-         if (parseInt(hours) >= 6) {
+         digits.pop(); // get rid of single minutes
+         const tensOfMinutes = digits.pop();
+         if (parseInt(tensOfMinutes) >= 6) {
              num -= 60;
              num += 100;
          }
@@ -90,16 +92,14 @@
      return num;
  }
 
- function imageFilenameFromTime(time: number, totalTime: number, frameRate: number): string {
-
-     const currentPosFraction = time/totalTime;
-     const totalImages = totalTime * frameRate * 2;
-     const currentImage = currentPosFraction * totalImages;
-     // const minutes = parseInt(currentImage % 60);
-     // const hours = parseInt((currentImage - minutes) / 60);
-     // const imageTime = hours + minutes + playStartTime;
-
-     const imageTime = clampImageNumber(currentImage + playStartTime);
+ function imageFilenameFromTime(time: number, frameRate: number): string {
+     const currentFrame = time * frameRate;
+     const totalFrameMinutes = currentFrame * 2;
+     const hours = Math.floor(totalFrameMinutes / 60);
+     const minutes = Math.floor(totalFrameMinutes % 60);
+     const frameTime = hours * 100 + minutes;
+     // * 100 so it's in digit slot 3, or 3 and 4;
+     const imageTime = clampImageNumber(frameTime + playStartTime);
      const imageFilename = imageFilenameFromNumber(imageTime);
      return imageFilename;
  }
@@ -118,14 +118,15 @@
      }
 
      function pause() {
-         paused = true;
          clearInterval(interval);
      }
 
      function seek(time: number) {
          if (time < 0) {time = 0};
-         let seekTo = url + imageFilenameFromTime(time, $totalPlaytime, $frameRate);
-         set(seekTo);
+         if (time < $totalPlaytime) {
+             let seekTo = url + imageFilenameFromTime(time, $frameRate);
+             set(seekTo);
+         }
      }
      function resetStartPoint(){
          pause();
@@ -162,7 +163,6 @@
 
 
 </script>
-
 <img draggable="false"
      src={$timelapse}
      alt="Timelapse" />

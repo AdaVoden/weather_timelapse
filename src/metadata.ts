@@ -26,14 +26,19 @@ export function latestImageFromURL(url: string) {
 }
 
 
-function calculateTotalPlaytime(latestImage: string, rate: number, startTime: number): number {
-  const digits = latestImage.slice(0, 4);
-  const latestTime = parseFloat(digits);
+function calculateTotalPlaytime(latestImage: string, frameRate: number, startTime: number): number {
+
+  const latestTime = parseFloat(latestImage);
+  if (startTime > latestTime) {
+    return 0;
+  }
+
   const totalTime = latestTime - startTime;
-  const minutes = parseInt(totalTime % 60);
-  const hours = parseInt((totalTime - minutes) / 60);
+  const minutes = Math.floor(totalTime % 60);
+  const hours = Math.floor((totalTime - minutes) / 100);
+  // divide by 100 to reduce to single/double digits of hours
   const totalImages = (hours * 30) + (minutes / 2);
-  const playTime = totalImages / rate;
+  const playTime = totalImages / frameRate;
   return playTime;
 
 }

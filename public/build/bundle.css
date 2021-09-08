@@ -1,37 +1,4 @@
-input.svelte-y8xbaa.svelte-y8xbaa{visibility:hidden;width:0;height:0}label.svelte-y8xbaa.svelte-y8xbaa{display:block;width:12rem;height:50px;background-color:var(--secondary-dark-orange);border-radius:100px;position:relative;cursor:pointer;box-shadow:0 0 5px  var(--neutral-dark-grey)}label.svelte-y8xbaa.svelte-y8xbaa::after{content:"";width:40px;height:40px;background-color:var(--neutral-light-grey);position:absolute;border-radius:25px;top:5px;left:5px;transition:0.5s}input.svelte-y8xbaa:checked+label.svelte-y8xbaa:after{left:calc(100% - 5px);transform:translateX(-100%)}input.svelte-y8xbaa:checked+label.svelte-y8xbaa{background-color:var(--secondary-berry)}label.svelte-y8xbaa.svelte-y8xbaa:active:after{width:160px}h2.svelte-y8xbaa.svelte-y8xbaa{font-size:1rem;position:relative;color:white;user-select:none}.flex-right.svelte-y8xbaa.svelte-y8xbaa{display:flex;flex-direction:row;justify-content:right}.flex-left.svelte-y8xbaa.svelte-y8xbaa{display:flex;flex-direction:row;justify-content:left}.text-left.svelte-y8xbaa.svelte-y8xbaa{left:15px}.text-right.svelte-y8xbaa.svelte-y8xbaa{right:15px}div.svelte-13cfdq{position:relative}.controls.svelte-13cfdq{position:absolute;bottom:0;width:100%;transition:opacity 1s}.info.svelte-13cfdq{display:flex;width:100%;justify-content:space-between}span.svelte-13cfdq{padding:0.2em 0.5em;color:white;text-shadow:0 0 8px #000000;font-size:1.4em;opacity:0.7}.time.svelte-13cfdq{width:3em}.time.svelte-13cfdq:last-child{text-align:right
- }progress.svelte-13cfdq{display:block;width:100%;height:10px;-webkit-appearance:none;appearance:none}progress.svelte-13cfdq::-webkit-progress-bar{background-color:rgba(0, 0, 0, 0.2)}progress.svelte-13cfdq::-webkit-progress-value{background-color:rgba(255, 255, 255, 0.6)}/* Project variables */
-
-:root {
-    /*===========\
-    | Typography |
-    \===========*/
-
-    --font: sans-serif;
-    --font-mono: monospace;
-    --font-size: 10px; /*base 10 instead of 16*/
-    --linemax: 42em;
-    --lineheight: 1.5;
-
-    /*=======\
-    | Colour |
-    \=======*/
-
-    /* UofC colours */
-    --primary-red: #d6001c;
-    --primary-gold: #ffcd00;
-    --secondary-light-orange: #ffc300;
-    --secondary-dark-orange: #ff671f;
-    --secondary-rubine: #ed0a72;
-    --secondary-berry: #9c0534;
-    --accent-teal: #47a67c;
-    --accent-light-yellow: #ffe57b;
-    --accent-brown: #6c3302;
-    --accent-taupe: #d3ac8b;
-    --neutral-black: black;
-    --neutral-dark-grey: #6d6e71;
-    --neutral-light-grey: #c7c8ca;
-}
-
+input.svelte-y8xbaa.svelte-y8xbaa{visibility:hidden;width:0;height:0}label.svelte-y8xbaa.svelte-y8xbaa{display:block;width:12rem;height:50px;background-color:var(--secondary-dark-orange);border-radius:100px;position:relative;cursor:pointer;box-shadow:0 0 5px  var(--neutral-dark-grey)}label.svelte-y8xbaa.svelte-y8xbaa::after{content:"";width:40px;height:40px;background-color:var(--neutral-light-grey);position:absolute;border-radius:25px;top:5px;left:5px;transition:0.5s}input.svelte-y8xbaa:checked+label.svelte-y8xbaa:after{left:calc(100% - 5px);transform:translateX(-100%)}input.svelte-y8xbaa:checked+label.svelte-y8xbaa{background-color:var(--secondary-berry)}label.svelte-y8xbaa.svelte-y8xbaa:active:after{width:160px}h2.svelte-y8xbaa.svelte-y8xbaa{font-size:1rem;position:relative;color:white;user-select:none}.flex-right.svelte-y8xbaa.svelte-y8xbaa{display:flex;flex-direction:row;justify-content:right}.flex-left.svelte-y8xbaa.svelte-y8xbaa{display:flex;flex-direction:row;justify-content:left}.text-left.svelte-y8xbaa.svelte-y8xbaa{left:15px}.text-right.svelte-y8xbaa.svelte-y8xbaa{right:15px}
 body {
     width: 100%;
     height:100%;
@@ -99,4 +66,37 @@ h1 {
     padding-right: 4vh;
   }
 
+}
+div.svelte-pv6ez4{position:relative}.controls.svelte-pv6ez4{position:absolute;bottom:0;width:100%;transition:opacity 1s}.info.svelte-pv6ez4{display:flex;width:100%;justify-content:space-between}span.svelte-pv6ez4{padding:0.2em 0.5em;color:white;text-shadow:0 0 8px #000000;font-size:1.4em;opacity:0.7}.time.svelte-pv6ez4{width:3em}.time.svelte-pv6ez4:last-child{text-align:right
+ }progress.svelte-pv6ez4{display:block;width:100%;height:10px;-webkit-appearance:none;appearance:none}progress.svelte-pv6ez4::-webkit-progress-bar{background-color:rgba(0, 0, 0, 0.2)}progress.svelte-pv6ez4::-webkit-progress-value{background-color:rgba(255, 255, 255, 0.6)}/* Project variables */
+
+:root {
+    /*===========\
+    | Typography |
+    \===========*/
+
+    --font: sans-serif;
+    --font-mono: monospace;
+    --font-size: 10px; /*base 10 instead of 16*/
+    --linemax: 42em;
+    --lineheight: 1.5;
+
+    /*=======\
+    | Colour |
+    \=======*/
+
+    /* UofC colours */
+    --primary-red: #d6001c;
+    --primary-gold: #ffcd00;
+    --secondary-light-orange: #ffc300;
+    --secondary-dark-orange: #ff671f;
+    --secondary-rubine: #ed0a72;
+    --secondary-berry: #9c0534;
+    --accent-teal: #47a67c;
+    --accent-light-yellow: #ffe57b;
+    --accent-brown: #6c3302;
+    --accent-taupe: #d3ac8b;
+    --neutral-black: black;
+    --neutral-dark-grey: #6d6e71;
+    --neutral-light-grey: #c7c8ca;
 }

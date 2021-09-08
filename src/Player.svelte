@@ -37,6 +37,7 @@
  }
 
  function handleMouseup(e) {
+     // TODO handle distance dragged
      if (new Date() - lastMouseDown < 300) {
          //Play on click
          if (paused) {
@@ -67,10 +68,10 @@
                    on:mouseup={handleMouseup}>
 
     <Timelapse
-        bind:paused={paused}
-        bind:time={time}
+        paused={paused}
+               bind:time={time}
         allsky={allsky}
-    bind:totalPlaytime={duration} />
+               bind:totalPlaytime={duration} />
 
     <div class="controls" style="opacity: {$duration && showControls ? 1 : 0}">
 
@@ -90,6 +91,7 @@
 <style>
  div {
      position: relative;
+
  }
 
  .controls {
