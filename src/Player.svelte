@@ -1,82 +1,17 @@
 <script lang="ts">
  // These values are bound to properties of the video
  import { writable} from 'svelte/store'
- import { totalPlaytimeFromStores, frameRate, latestImageFromURL } from './metadata'
+ import Timelapse from './Timelapse.svelte'
  export let allsky = false;
- let baseURL = "/images/";
- let url: string;
- let totalPlaytime;
- let latestImage;
- let timelapse;
  let time = 0;
  let paused = true;
- let duration: number;
- $: if (allsky) {
-     setupTimelapse("AllSkyCamImages", 1200);
-
- } else {
-     setupTimelapse("WeatherCamImages", 0);
-
- }
-
- const millisecondsPerFrame = 1000/$frameRate;
- const secondsPerFrame = millisecondsPerFrame/1000;
+ let duration;
 
  let showControls = true;
  let showControlsTimeout;
 
  // Used to track time of last mouse down event
  let lastMouseDown;
-
- function setupTimelapse(imageFolder: string, startPoint: number) {
-     if (typeof timelapse !== 'undefined') {
-         timelapse.pause();
-
-         paused = true;
-     }
-     url = baseURL + imageFolder + "/";
-
-     latestImage = latestImageFromURL(url + "lastimage");
-
-     totalPlaytime = totalPlaytimeFromStores(latestImage, frameRate, startPoint);
-     duration = $totalPlaytime;
-     time = 0;
-     let startFilename = imageFilenameFromNumber(startPoint);
-     timelapse = createTimelapse(startFilename);
- }
-
- function createTimelapse(startPoint: number) {
-     const { subscribe, set, update } = writable(url + startPoint);
-     let interval;
-
-     function play() {
-         interval = setInterval(() => {
-             if (time < duration) {
-                 update(n => nextImageFilename(n, $latestImage));
-                 time = time + secondsPerFrame;
-             };
-         }, millisecondsPerFrame);
-     }
-
-     function pause() {
-         clearInterval(interval);
-     }
-
-     function seek(time: number) {
-         if (time < 0) {time = 0};
-         let seekTo = url + imageFilenameFromTime(time, duration, $frameRate);
-         set(seekTo);
-     }
-
-     return {
-         subscribe,
-         play: () => play(),
-         pause: () => pause(),
-         seek: (time: number) => seek(time)
-     };
-
- }
-
 
  function handleMove(e) {
      // Make the controls visible, but fade out after
@@ -92,8 +27,7 @@
          left,
          right
      } = this.getBoundingClientRect();
-     time = duration * (clientX - left) / (right - left);
-     timelapse.seek(time);
+     time = $duration * (clientX - left) / (right - left);
  }
 
  // we can't rely on the built-in click event, because it fires
@@ -103,15 +37,14 @@
  }
 
  function handleMouseup(e) {
-     if (new Date() - lastMouseDown < 300) { //Play on click
-                                           if (paused) {
-                                               paused = false
-                                               timelapse.play()
-                                           } else {
-                                               paused = true
-                                               timelapse.pause()
-                                           };
-                                           }
+     if (new Date() - lastMouseDown < 300) {
+         //Play on click
+         if (paused) {
+             paused = false
+         } else {
+             paused = true
+         };
+     }
 
  }
 
@@ -124,73 +57,30 @@
 
      return `${minutes}:${seconds}`;
  }
-
- function imageFilenameFromTime(time: number, totalTime: number, frameRate: number): string {
-     const currentPosFraction = time/totalTime;
-     const totalImages = totalTime * frameRate * 2;
-     const currentImage = currentPosFraction * totalImages;
-     let imageMinutes = parseInt(currentImage % 60);
-     if(imageMinutes % 2 === 1) {
-         // Because one image per two minutes
-         imageMinutes = imageMinutes - 1;
-     }
-     const imageHours = parseInt((currentImage - imageMinutes) / 60);
-     const minuteString = ("" + imageMinutes).padStart(2, "0");
-     const hourString = ("" + imageHours).padStart(2, "0");
-     const imageFilename = hourString + minuteString + ".jpg";
-     return imageFilename;
- }
-
- function nextImageFilename(currentImage: string, latestImage: string): string {
-     currentImage = currentImage.split("/").at(-1);
-     // Just in case we're passed in full URLs
-     currentImage = ( currentImage).split(".")[0];
-     latestImage = ( latestImage).split(".")[0];
-     let nextImage = parseInt(currentImage) + 2;
-     let latestImageNum = parseInt(latestImage)
-     let result: string;
-     if (((nextImage - 60) % 100) === 0 && nextImage !== 0) {
-         // To increment hour instead of using impossible time
-         nextImage -= 60;
-         nextImage += 100;
-     }
-     if (nextImage >= latestImageNum) {
-         // Never go past latest image
-         nextImage = latestImageNum;
-     }
-     if (nextImage > 2400) {
-         // Reset just in case
-         nextImage = 0;
-     }
-     let resultNumber = imageFilenameFromNumber(nextImage);
-     result = `${url}${resultNumber}`
-     return result;
- }
- function imageFilenameFromNumber(imageNumber: number){
-     let filename = String(imageNumber);
-     filename = `${filename.padStart(4, "0")}.jpg`;
-     return filename;
- }
 </script>
 
-<div>
+<div  on:mousemove={handleMove}
+                   on:touchmove|preventDefault={handleMove}
+      on:mousedown={handleMousedown}
+                   on:touchstart|preventDefault={handleMousedown}
+      on:touchend|preventDefault={handleMouseup}
+                   on:mouseup={handleMouseup}>
 
-    <img draggable="false" src={$timelapse}
-                    on:mousemove={handleMove}
-         on:touchmove|preventDefault={handleMove}
-                    on:mousedown={handleMousedown}
-         on:mouseup={handleMouseup}
-    alt="Timelapse" />
+    <Timelapse
+        bind:paused={paused}
+        bind:time={time}
+        allsky={allsky}
+    bind:totalPlaytime={duration} />
 
-    <div class="controls" style="opacity: {duration && showControls ? 1 : 0}">
+    <div class="controls" style="opacity: {$duration && showControls ? 1 : 0}">
 
         <div class="info">
             <span class="time">{format(time)}</span>
             <span>click anywhere to {paused ? 'play' : 'pause'} / drag to seek</span>
-            <span class="time">{format(duration)}</span>
+            <span class="time">{format($duration)}</span>
         </div>
 
-        <progress value="{time/duration || 0}" />
+        <progress value="{time/$duration || 0}" />
 
 
 
