@@ -10,10 +10,9 @@
 
 </script>
 
-
 <header class="flex-container row">
     <div class="left">
-        <img src="./{__timelapseVariant__}/uc-rothney.png" class="header-img" alt="University of Calgary logo" />
+        <img src="/timelapse/{__timelapseVariant__}/uc-rothney.png" class="header-img" alt="University of Calgary logo" />
     </div> <!--  end left  -->
 
     <div class="right">

@@ -41,7 +41,7 @@ export default ["weather", "allsky"].map((name, index) => ({
     sourcemap: true,
     format: "iife",
     name: name,
-    file: `public/${name}/build/bundle.js`,
+    file: `public/timelapse/${name}/build/bundle.js`,
   },
   plugins: sveltePlugins(name),
   watch: {
@@ -67,7 +67,7 @@ function sveltePlugins(name) {
     // we'll extract any component CSS out into
     // a separate file - better for performance
     css({
-      output: "bundle.css",
+      output: `timelapse/${name}/bundle.css`,
     }),
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -90,7 +90,7 @@ function sveltePlugins(name) {
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
-    !production && livereload(`public/${name}`),
+    !production && livereload("public"),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
