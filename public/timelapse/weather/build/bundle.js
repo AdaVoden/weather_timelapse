@@ -1,2 +1,1449 @@
-var weather=function(){"use strict";function t(){}function e(t){return t()}function n(){return Object.create(null)}function o(t){t.forEach(e)}function r(t){return"function"==typeof t}function s(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}let u,c;function i(t,e){return u||(u=document.createElement("a")),u.href=e,t===u.href}function l(e,...n){if(null==e)return t;const o=e.subscribe(...n);return o.unsubscribe?()=>o.unsubscribe():o}function a(t,e){t.appendChild(e)}function f(t,e,n){t.insertBefore(e,n||null)}function p(t){t.parentNode.removeChild(t)}function d(t){return document.createElement(t)}function $(t){return document.createTextNode(t)}function h(){return $(" ")}function m(t,e,n,o){return t.addEventListener(e,n,o),()=>t.removeEventListener(e,n,o)}function y(t){return function(e){return e.preventDefault(),t.call(this,e)}}function g(t,e,n){null==n?t.removeAttribute(e):t.getAttribute(e)!==n&&t.setAttribute(e,n)}function v(t,e){e=""+e,t.wholeText!==e&&(t.data=e)}function b(t,e,n,o){t.style.setProperty(e,n,o?"important":"")}function k(t){c=t}const _=[],x=[],w=[],P=[],S=Promise.resolve();let E=!1;function I(t){w.push(t)}function M(t){P.push(t)}let z=!1;const A=new Set;function T(){if(!z){z=!0;do{for(let t=0;t<_.length;t+=1){const e=_[t];k(e),C(e.$$)}for(k(null),_.length=0;x.length;)x.pop()();for(let t=0;t<w.length;t+=1){const e=w[t];A.has(e)||(A.add(e),e())}w.length=0}while(_.length);for(;P.length;)P.pop()();E=!1,z=!1,A.clear()}}function C(t){if(null!==t.fragment){t.update(),o(t.before_update);const e=t.dirty;t.dirty=[-1],t.fragment&&t.fragment.p(t.ctx,e),t.after_update.forEach(I)}}const N=new Set;function j(t,e){t&&t.i&&(N.delete(t),t.i(e))}function L(t,e,n,o){if(t&&t.o){if(N.has(t))return;N.add(t),undefined.c.push((()=>{N.delete(t),o&&(n&&t.d(1),o())})),t.o(e)}}function D(t,e,n){const o=t.$$.props[e];void 0!==o&&(t.$$.bound[o]=n,n(t.$$.ctx[o]))}function H(t){t&&t.c()}function O(t,n,s,u){const{fragment:c,on_mount:i,on_destroy:l,after_update:a}=t.$$;c&&c.m(n,s),u||I((()=>{const n=i.map(e).filter(r);l?l.push(...n):o(n),t.$$.on_mount=[]})),a.forEach(I)}function W(t,e){const n=t.$$;null!==n.fragment&&(o(n.on_destroy),n.fragment&&n.fragment.d(e),n.on_destroy=n.fragment=null,n.ctx=[])}function X(t,e){-1===t.$$.dirty[0]&&(_.push(t),E||(E=!0,S.then(T)),t.$$.dirty.fill(0)),t.$$.dirty[e/31|0]|=1<<e%31}function q(e,r,s,u,i,l,a,f=[-1]){const d=c;k(e);const $=e.$$={fragment:null,ctx:null,props:l,update:t,not_equal:i,bound:n(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(d?d.$$.context:r.context||[]),callbacks:n(),dirty:f,skip_bound:!1,root:r.target||d.$$.root};a&&a($.root);let h=!1;if($.ctx=s?s(e,r.props||{},((t,n,...o)=>{const r=o.length?o[0]:n;return $.ctx&&i($.ctx[t],$.ctx[t]=r)&&(!$.skip_bound&&$.bound[t]&&$.bound[t](r),h&&X(e,t)),n})):[],$.update(),h=!0,o($.before_update),$.fragment=!!u&&u($.ctx),r.target){if(r.hydrate){const t=function(t){return Array.from(t.childNodes)}(r.target);$.fragment&&$.fragment.l(t),t.forEach(p)}else $.fragment&&$.fragment.c();r.intro&&j(e.$$.fragment),O(e,r.target,r.anchor,r.customElement),T()}k(d)}class B{$destroy(){W(this,1),this.$destroy=t}$on(t,e){const n=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return n.push(e),()=>{const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}$set(t){var e;this.$$set&&(e=t,0!==Object.keys(e).length)&&(this.$$.skip_bound=!0,this.$$set(t),this.$$.skip_bound=!1)}}const R=[];function F(t,e){return{subscribe:G(t,e).subscribe}}function G(e,n=t){let o;const r=new Set;function u(t){if(s(e,t)&&(e=t,o)){const t=!R.length;for(const t of r)t[1](),R.push(t,e);if(t){for(let t=0;t<R.length;t+=2)R[t][0](R[t+1]);R.length=0}}}return{set:u,update:function(t){u(t(e))},subscribe:function(s,c=t){const i=[s,c];return r.add(i),1===r.size&&(o=n(u)||t),s(e),()=>{r.delete(i),0===r.size&&(o(),o=null)}}}}const U=G(5);function J(t){let e;const n=new XMLHttpRequest;return n.open("GET",t,!1),n.send(null),e=n.responseText,e}function K(e,n,s){return function(e,n,s){const u=!Array.isArray(e),c=u?[e]:e,i=n.length<2;return F(s,(e=>{let s=!1;const a=[];let f=0,p=t;const d=()=>{if(f)return;p();const o=n(u?a[0]:a,e);i?e(o):p=r(o)?o:t},$=c.map(((t,e)=>l(t,(t=>{a[e]=t,f&=~(1<<e),s&&d()}),(()=>{f|=1<<e}))));return s=!0,d(),function(){o($),p()}}))}([e,n],(([t,e])=>function(t,e,n){const o=parseFloat(t);if(n>o)return 0;const r=o-n,s=Math.floor(r%60);return(30*Math.floor((r-s)/100)+s/2)/e}(t,e,s)))}function Q(e){let n,o;return{c(){n=d("img"),g(n,"draggable","false"),i(n.src,o=e[3])||g(n,"src",o),g(n,"alt","Timelapse")},m(t,e){f(t,n,e)},p(t,[e]){8&e&&!i(n.src,o=t[3])&&g(n,"src",o)},i:t,o:t,d(t){t&&p(n)}}}let V="AllSkyCamImages",Y="WeatherCamImages";function Z(t){return`${String(t).padStart(4,"0")}.jpg`}function tt(t){t=function(t){(t=Math.floor(t))%2==1&&(t=parseInt(t-1));return t}(t);const e=String(t).split("");if(e.length>=2){e.pop();const n=e.pop();parseInt(n)>=6&&(t-=60,t+=100)}return t>2400&&(t=0),t}function et(e,n,o){let r,s,u,c,i=t,a=t,f=()=>(a(),a=l(_,(t=>o(10,s=t))),_),p=t;var d,$;d=U,$=t=>o(11,u=t),e.$$.on_destroy.push(l(d,$)),e.$$.on_destroy.push((()=>i())),e.$$.on_destroy.push((()=>a())),e.$$.on_destroy.push((()=>p()));let h,m,y,g,{paused:v=!0}=n,{time:b}=n,{allsky:k}=n,{totalPlaytime:_}=n;f();const x=1e3/u,w=x/1e3;function P(t){const{subscribe:e,set:n,update:c}=G(h+t);let i;function l(){clearInterval(i)}function a(t){if(t<0&&(t=0),t<s){let e=h+function(t,e){const n=t*e*2;return Z(tt(100*Math.floor(n/60)+Math.floor(n%60)+m))}(t,u);n(e)}}function f(){b<s&&(c((t=>function(t,e){t=t.split("/").at(-1),e=e.split("/").at(-1),t=t.split(".")[0],e=e.split(".")[0];let n=parseInt(t)+2,o=parseInt(e);n=tt(n),n>=o&&(n=o);let r=Z(n);return`${h}${r}`}(t,r))),o(4,b+=w))}return{subscribe:e,play:()=>{i=setInterval((()=>{f()}),x)},pause:()=>l(),seek:t=>a(t),resetStartPoint:()=>function(){l();let t=h+Z(m);n(t)}(),next:()=>f()}}function S(t,e){void 0!==g&&g.pause(),m=e,h=`/images/${t}/`,o(2,y=function(t){return F(J(t),(function(e){const n=setInterval((async()=>{e(J(t))}),12e4);return function(){clearInterval(n)}}))}(h+"lastimage")),i(),i=l(y,(t=>o(9,r=t))),f(o(0,_=K(y,U,e))),o(4,b=0)}function E(t,e){S(t,e);const n=Z(e);o(1,g=P(n)),p(),p=l(g,(t=>o(3,c=t)))}return k?(m=1200,E(V,m)):(m=500,E(Y,m)),e.$$set=t=>{"paused"in t&&o(5,v=t.paused),"time"in t&&o(4,b=t.time),"allsky"in t&&o(6,k=t.allsky),"totalPlaytime"in t&&f(o(0,_=t.totalPlaytime))},e.$$.update=()=>{66&e.$$.dirty&&(k?(S(V,1200),g.resetStartPoint()):(S(Y,500),g.resetStartPoint())),34&e.$$.dirty&&(v?g.pause():g.play()),18&e.$$.dirty&&g.seek(b)},[_,g,y,c,b,v,k]}class nt extends B{constructor(t){super(),q(this,t,et,Q,s,{paused:5,time:4,allsky:6,totalPlaytime:0})}}function ot(t){let e,n,r,s,u,c,i,l,k,_,w,P,S,E,I,z,A,T,C,N,X,q,B,R=rt(t[1])+"",F=t[2]?"play":"pause",G=rt(t[5])+"";function U(e){t[9](e)}function J(e){t[10](e)}let K={paused:t[2],allsky:t[0]};return void 0!==t[1]&&(K.time=t[1]),void 0!==t[3]&&(K.totalPlaytime=t[3]),n=new nt({props:K}),x.push((()=>D(n,"time",U))),x.push((()=>D(n,"totalPlaytime",J))),{c(){e=d("div"),H(n.$$.fragment),u=h(),c=d("div"),i=d("div"),l=d("span"),k=$(R),_=h(),w=d("span"),P=$("click anywhere to "),S=$(F),E=$(" / drag to seek"),I=h(),z=d("span"),A=$(G),T=h(),C=d("progress"),g(l,"class","time svelte-pv6ez4"),g(w,"class","svelte-pv6ez4"),g(z,"class","time svelte-pv6ez4"),g(i,"class","info svelte-pv6ez4"),C.value=N=t[1]/t[5]||0,g(C,"class","svelte-pv6ez4"),g(c,"class","controls svelte-pv6ez4"),b(c,"opacity",t[5]&&t[4]?1:0),g(e,"class","svelte-pv6ez4")},m(o,r){f(o,e,r),O(n,e,null),a(e,u),a(e,c),a(c,i),a(i,l),a(l,k),a(i,_),a(i,w),a(w,P),a(w,S),a(w,E),a(i,I),a(i,z),a(z,A),a(c,T),a(c,C),X=!0,q||(B=[m(e,"mousemove",t[6]),m(e,"touchmove",y(t[6])),m(e,"mousedown",t[7]),m(e,"touchstart",y(t[7])),m(e,"touchend",y(t[8])),m(e,"mouseup",t[8])],q=!0)},p(t,[e]){const o={};4&e&&(o.paused=t[2]),1&e&&(o.allsky=t[0]),!r&&2&e&&(r=!0,o.time=t[1],M((()=>r=!1))),!s&&8&e&&(s=!0,o.totalPlaytime=t[3],M((()=>s=!1))),n.$set(o),(!X||2&e)&&R!==(R=rt(t[1])+"")&&v(k,R),(!X||4&e)&&F!==(F=t[2]?"play":"pause")&&v(S,F),(!X||32&e)&&G!==(G=rt(t[5])+"")&&v(A,G),(!X||34&e&&N!==(N=t[1]/t[5]||0))&&(C.value=N),(!X||48&e)&&b(c,"opacity",t[5]&&t[4]?1:0)},i(t){X||(j(n.$$.fragment,t),X=!0)},o(t){L(n.$$.fragment,t),X=!1},d(t){t&&p(e),W(n),q=!1,o(B)}}}function rt(t){if(isNaN(t))return"...";const e=Math.floor(t/60);return(t=Math.floor(t%60))<10&&(t="0"+t),`${e}:${t}`}function st(e,n,o){let r,s=t;e.$$.on_destroy.push((()=>s()));let u,c,i,{allsky:a=!1}=n,f=0,p=!0,d=!0;return e.$$set=t=>{"allsky"in t&&o(0,a=t.allsky)},[a,f,p,u,d,r,function(t){if(clearTimeout(c),c=setTimeout((()=>o(4,d=!1)),2500),o(4,d=!0),!u)return;if("touchmove"!==t.type&&!(1&t.buttons))return;const e="touchmove"===t.type?t.touches[0].clientX:t.clientX,{left:n,right:s}=this.getBoundingClientRect();o(1,f=r*(e-n)/(s-n))},function(t){i=new Date},function(t){new Date-i<300&&o(2,p=!p)},function(t){f=t,o(1,f)},function(t){u=t,o(3,u),s(),s=l(u,(t=>o(5,r=t)))}]}class ut extends B{constructor(t){super(),q(this,t,st,ot,s,{allsky:0})}}function ct(t){let e,n,o,r,s,u,c,i,l,m,y,b,k,_,x=t[0]?"AllSky":"Weather";return y=new ut({props:{allsky:t[0]}}),{c(){e=d("header"),n=d("div"),n.innerHTML='<img src="/timelapse/weather/uc-rothney.png" class="header-img" alt="University of Calgary logo"/>',o=h(),r=d("div"),s=d("h1"),u=$(x),c=$(" Timelapse"),i=h(),l=d("main"),m=d("div"),H(y.$$.fragment),b=h(),k=d("footer"),g(n,"class","left"),g(r,"class","right"),g(e,"class","flex-container row"),g(m,"class","player"),g(l,"class","flex-container column")},m(t,p){f(t,e,p),a(e,n),a(e,o),a(e,r),a(r,s),a(s,u),a(s,c),f(t,i,p),f(t,l,p),a(l,m),O(y,m,null),f(t,b,p),f(t,k,p),_=!0},p(t,[e]){(!_||1&e)&&x!==(x=t[0]?"AllSky":"Weather")&&v(u,x);const n={};1&e&&(n.allsky=t[0]),y.$set(n)},i(t){_||(j(y.$$.fragment,t),_=!0)},o(t){L(y.$$.fragment,t),_=!1},d(t){t&&p(e),t&&p(i),t&&p(l),W(y),t&&p(b),t&&p(k)}}}function it(t,e,n){return console.log("Hello there"),[!1]}return new class extends B{constructor(t){super(),q(this,t,it,ct,s,{})}}({target:document.body,props:{}})}();
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+var weather = (function () {
+    'use strict';
+
+    function noop() { }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    let src_url_equal_anchor;
+    function src_url_equal(element_src, url) {
+        if (!src_url_equal_anchor) {
+            src_url_equal_anchor = document.createElement('a');
+        }
+        src_url_equal_anchor.href = url;
+        return element_src === src_url_equal_anchor.href;
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function validate_store(store, name) {
+        if (store != null && typeof store.subscribe !== 'function') {
+            throw new Error(`'${name}' is not a store with a 'subscribe' method`);
+        }
+    }
+    function subscribe(store, ...callbacks) {
+        if (store == null) {
+            return noop;
+        }
+        const unsub = store.subscribe(...callbacks);
+        return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
+    }
+    function component_subscribe(component, store, callback) {
+        component.$$.on_destroy.push(subscribe(store, callback));
+    }
+    function append(target, node) {
+        target.appendChild(node);
+    }
+    function insert(target, node, anchor) {
+        target.insertBefore(node, anchor || null);
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function prevent_default(fn) {
+        return function (event) {
+            event.preventDefault();
+            // @ts-ignore
+            return fn.call(this, event);
+        };
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
+    function custom_event(type, detail, bubbles = false) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, bubbles, false, detail);
+        return e;
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    function add_flush_callback(fn) {
+        flush_callbacks.push(fn);
+    }
+    let flushing = false;
+    const seen_callbacks = new Set();
+    function flush() {
+        if (flushing)
+            return;
+        flushing = true;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            for (let i = 0; i < dirty_components.length; i += 1) {
+                const component = dirty_components[i];
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        flushing = false;
+        seen_callbacks.clear();
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function bind(component, name, callback) {
+        const index = component.$$.props[name];
+        if (index !== undefined) {
+            component.$$.bound[index] = callback;
+            callback(component.$$.ctx[index]);
+        }
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(parent_component ? parent_component.$$.context : options.context || []),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
+        };
+        append_styles && append_styles($$.root);
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.42.1' }, detail), true));
+    }
+    function append_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append(target, node);
+    }
+    function insert_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
+    const subscriber_queue = [];
+    /**
+     * Creates a `Readable` store that allows reading by subscription.
+     * @param value initial value
+     * @param {StartStopNotifier}start start and stop notifications for subscriptions
+     */
+    function readable(value, start) {
+        return {
+            subscribe: writable(value, start).subscribe
+        };
+    }
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+    function derived(stores, fn, initial_value) {
+        const single = !Array.isArray(stores);
+        const stores_array = single
+            ? [stores]
+            : stores;
+        const auto = fn.length < 2;
+        return readable(initial_value, (set) => {
+            let inited = false;
+            const values = [];
+            let pending = 0;
+            let cleanup = noop;
+            const sync = () => {
+                if (pending) {
+                    return;
+                }
+                cleanup();
+                const result = fn(single ? values[0] : values, set);
+                if (auto) {
+                    set(result);
+                }
+                else {
+                    cleanup = is_function(result) ? result : noop;
+                }
+            };
+            const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+                values[i] = value;
+                pending &= ~(1 << i);
+                if (inited) {
+                    sync();
+                }
+            }, () => {
+                pending |= (1 << i);
+            }));
+            inited = true;
+            sync();
+            return function stop() {
+                run_all(unsubscribers);
+                cleanup();
+            };
+        });
+    }
+
+    let intervalCheck = 120000; /* 2 minutes */
+    const frameRate = writable(5);
+    function getLatestFilename(url) {
+        let result;
+        const webReq = new XMLHttpRequest();
+        webReq.open("GET", url, false);
+        webReq.send(null);
+        result = webReq.responseText;
+        return result;
+    }
+    function latestImageFromURL(url) {
+        return readable(getLatestFilename(url), function start(set) {
+            const interval = setInterval(async () => {
+                set(getLatestFilename(url));
+            }, intervalCheck);
+            return function stop() {
+                clearInterval(interval);
+            };
+        });
+    }
+    function calculateTotalPlaytime(latestImage, frameRate, startTime) {
+        const latestTime = parseFloat(latestImage);
+        if (startTime > latestTime) {
+            return 0;
+        }
+        const totalTime = latestTime - startTime;
+        const minutes = Math.floor(totalTime % 60);
+        const hours = Math.floor((totalTime - minutes) / 100);
+        // divide by 100 to reduce to single/double digits of hours
+        const totalImages = (hours * 30) + (minutes / 2);
+        const playTime = totalImages / frameRate;
+        return playTime;
+    }
+    function totalPlaytimeFromStores(latestImage, frameRate, startTime) {
+        return derived([latestImage, frameRate], ([$latestImage, $frameRate]) => calculateTotalPlaytime($latestImage, $frameRate, startTime));
+    }
+
+    /* src/Timelapse.svelte generated by Svelte v3.42.1 */
+
+    const file$2 = "src/Timelapse.svelte";
+
+    function create_fragment$2(ctx) {
+    	let img_1;
+    	let img_1_src_value;
+
+    	const block = {
+    		c: function create() {
+    			img_1 = element("img");
+    			attr_dev(img_1, "draggable", "false");
+    			if (!src_url_equal(img_1.src, img_1_src_value = /*$timelapse*/ ctx[3])) attr_dev(img_1, "src", img_1_src_value);
+    			attr_dev(img_1, "alt", "Timelapse");
+    			add_location(img_1, file$2, 155, 0, 4632);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, img_1, anchor);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*$timelapse*/ 8 && !src_url_equal(img_1.src, img_1_src_value = /*$timelapse*/ ctx[3])) {
+    				attr_dev(img_1, "src", img_1_src_value);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(img_1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function imageFilenameFromNumber(imageNumber) {
+    	let filename = String(imageNumber);
+    	return `${filename.padStart(4, "0")}.jpg`;
+    }
+
+    function clampImageNumber(num) {
+    	num = roundToEven(num);
+    	const digits = String(num).split('');
+
+    	if (digits.length >= 2) {
+    		digits.pop(); // get rid of single minutes
+    		const tensOfMinutes = digits.pop();
+
+    		if (parseInt(tensOfMinutes) >= 6) {
+    			num -= 60;
+    			num += 100;
+    		}
+    	}
+
+    	if (num > 2400) {
+    		// Reset just in case
+    		num = 0;
+    	}
+
+    	return num;
+    }
+
+    function roundToEven(num) {
+    	num = Math.floor(num); // No floats
+
+    	if (num % 2 === 1) {
+    		num = parseInt(num - 1);
+    	}
+
+    	return num;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let $latestImage,
+    		$$unsubscribe_latestImage = noop,
+    		$$subscribe_latestImage = () => ($$unsubscribe_latestImage(), $$unsubscribe_latestImage = subscribe(latestImage, $$value => $$invalidate(9, $latestImage = $$value)), latestImage);
+
+    	let $totalPlaytime,
+    		$$unsubscribe_totalPlaytime = noop,
+    		$$subscribe_totalPlaytime = () => ($$unsubscribe_totalPlaytime(), $$unsubscribe_totalPlaytime = subscribe(totalPlaytime, $$value => $$invalidate(10, $totalPlaytime = $$value)), totalPlaytime);
+
+    	let $frameRate;
+
+    	let $timelapse,
+    		$$unsubscribe_timelapse = noop,
+    		$$subscribe_timelapse = () => ($$unsubscribe_timelapse(), $$unsubscribe_timelapse = subscribe(timelapse, $$value => $$invalidate(3, $timelapse = $$value)), timelapse);
+
+    	validate_store(frameRate, 'frameRate');
+    	component_subscribe($$self, frameRate, $$value => $$invalidate(11, $frameRate = $$value));
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_latestImage());
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_totalPlaytime());
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_timelapse());
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Timelapse', slots, []);
+    	let { paused = true } = $$props;
+    	let { time } = $$props;
+    	let { allsky } = $$props;
+    	let { totalPlaytime } = $$props;
+    	validate_store(totalPlaytime, 'totalPlaytime');
+    	$$subscribe_totalPlaytime();
+    	let baseURL = "/images";
+    	let allSkyFolder = "AllSkyCamImages";
+    	let weatherFolder = "WeatherCamImages";
+    	let url;
+    	let playStartTime;
+    	let latestImage;
+    	let timelapse;
+    	let img;
+    	const millisecondsPerFrame = 1000 / $frameRate;
+    	const secondsPerFrame = millisecondsPerFrame / 1000;
+
+    	// TODO: fix double initialization
+    	// TODO: fix double play/seek behaviour
+    	// Before mounting setup
+    	if (allsky) {
+    		playStartTime = 1200;
+    		setupTimelapse(allSkyFolder, playStartTime);
+    	} else {
+    		playStartTime = 500;
+    		setupTimelapse(weatherFolder, playStartTime);
+    	}
+
+    	function nextImageFilename(currentImage, latestImage) {
+    		currentImage = currentImage.split("/").at(-1);
+    		latestImage = latestImage.split("/").at(-1);
+
+    		// Just in case we're passed in full URLs
+    		currentImage = currentImage.split(".")[0];
+
+    		latestImage = latestImage.split(".")[0];
+    		let nextImage = parseInt(currentImage) + 2;
+    		let latestImageNum = parseInt(latestImage);
+    		nextImage = clampImageNumber(nextImage);
+
+    		if (nextImage >= latestImageNum) {
+    			// Never go past latest image
+    			nextImage = latestImageNum;
+    		}
+
+    		let resultNumber = imageFilenameFromNumber(nextImage);
+    		return `${url}${resultNumber}`;
+    	}
+
+    	function imageFilenameFromTime(time, frameRate) {
+    		const currentFrame = time * frameRate;
+    		const totalFrameMinutes = currentFrame * 2;
+    		const hours = Math.floor(totalFrameMinutes / 60);
+    		const minutes = Math.floor(totalFrameMinutes % 60);
+    		const frameTime = hours * 100 + minutes;
+
+    		// * 100 so it's in digit slot 3, or 3 and 4;
+    		const imageTime = clampImageNumber(frameTime + playStartTime);
+
+    		const imageFilename = imageFilenameFromNumber(imageTime);
+    		return imageFilename;
+    	}
+
+    	function createTimelapse(startPoint) {
+    		const { subscribe, set, update } = writable(url + startPoint);
+    		let interval;
+
+    		function play() {
+    			interval = setInterval(
+    				() => {
+    					next();
+    				},
+    				millisecondsPerFrame
+    			);
+    		}
+
+    		function pause() {
+    			clearInterval(interval);
+    		}
+
+    		function seek(time) {
+    			if (time < 0) {
+    				time = 0;
+    			}
+
+    			
+
+    			if (time < $totalPlaytime) {
+    				let seekTo = url + imageFilenameFromTime(time, $frameRate);
+    				set(seekTo);
+    			}
+    		}
+
+    		function next() {
+    			if (time < $totalPlaytime) {
+    				update(n => nextImageFilename(n, $latestImage));
+    				$$invalidate(4, time = time + secondsPerFrame);
+    			}
+
+    			
+    		}
+
+    		function resetStartPoint() {
+    			pause();
+    			let seekTo = url + imageFilenameFromNumber(playStartTime);
+    			set(seekTo);
+    		}
+
+    		return {
+    			subscribe,
+    			play: () => play(),
+    			pause: () => pause(),
+    			seek: time => seek(time),
+    			resetStartPoint: () => resetStartPoint(),
+    			next: () => next()
+    		};
+    	}
+
+    	function setupTimelapseVariables(imageFolder, startPoint) {
+    		if (typeof timelapse !== 'undefined') {
+    			timelapse.pause();
+    		}
+
+    		playStartTime = startPoint;
+    		url = `${baseURL}/${imageFolder}/`;
+    		$$subscribe_latestImage($$invalidate(2, latestImage = latestImageFromURL(url + "lastimage")));
+    		$$subscribe_totalPlaytime($$invalidate(0, totalPlaytime = totalPlaytimeFromStores(latestImage, frameRate, startPoint)));
+    		$$invalidate(4, time = 0);
+    	}
+
+    	function setupTimelapse(imageFolder, startPoint) {
+    		setupTimelapseVariables(imageFolder, startPoint);
+    		const startFilename = imageFilenameFromNumber(startPoint);
+    		$$subscribe_timelapse($$invalidate(1, timelapse = createTimelapse(startFilename)));
+    	}
+
+    	const writable_props = ['paused', 'time', 'allsky', 'totalPlaytime'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Timelapse> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('paused' in $$props) $$invalidate(5, paused = $$props.paused);
+    		if ('time' in $$props) $$invalidate(4, time = $$props.time);
+    		if ('allsky' in $$props) $$invalidate(6, allsky = $$props.allsky);
+    		if ('totalPlaytime' in $$props) $$subscribe_totalPlaytime($$invalidate(0, totalPlaytime = $$props.totalPlaytime));
+    	};
+
+    	$$self.$capture_state = () => ({
+    		writable,
+    		totalPlaytimeFromStores,
+    		frameRate,
+    		latestImageFromURL,
+    		paused,
+    		time,
+    		allsky,
+    		totalPlaytime,
+    		baseURL,
+    		allSkyFolder,
+    		weatherFolder,
+    		url,
+    		playStartTime,
+    		latestImage,
+    		timelapse,
+    		img,
+    		millisecondsPerFrame,
+    		secondsPerFrame,
+    		imageFilenameFromNumber,
+    		nextImageFilename,
+    		clampImageNumber,
+    		roundToEven,
+    		imageFilenameFromTime,
+    		createTimelapse,
+    		setupTimelapseVariables,
+    		setupTimelapse,
+    		$latestImage,
+    		$totalPlaytime,
+    		$frameRate,
+    		$timelapse
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('paused' in $$props) $$invalidate(5, paused = $$props.paused);
+    		if ('time' in $$props) $$invalidate(4, time = $$props.time);
+    		if ('allsky' in $$props) $$invalidate(6, allsky = $$props.allsky);
+    		if ('totalPlaytime' in $$props) $$subscribe_totalPlaytime($$invalidate(0, totalPlaytime = $$props.totalPlaytime));
+    		if ('baseURL' in $$props) baseURL = $$props.baseURL;
+    		if ('allSkyFolder' in $$props) $$invalidate(13, allSkyFolder = $$props.allSkyFolder);
+    		if ('weatherFolder' in $$props) $$invalidate(14, weatherFolder = $$props.weatherFolder);
+    		if ('url' in $$props) url = $$props.url;
+    		if ('playStartTime' in $$props) playStartTime = $$props.playStartTime;
+    		if ('latestImage' in $$props) $$subscribe_latestImage($$invalidate(2, latestImage = $$props.latestImage));
+    		if ('timelapse' in $$props) $$subscribe_timelapse($$invalidate(1, timelapse = $$props.timelapse));
+    		if ('img' in $$props) img = $$props.img;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*allsky, timelapse*/ 66) {
+    			if (allsky) {
+    				setupTimelapseVariables(allSkyFolder, 1200);
+    				timelapse.resetStartPoint();
+    			} else {
+    				setupTimelapseVariables(weatherFolder, 500);
+    				timelapse.resetStartPoint();
+    			}
+    		}
+
+    		if ($$self.$$.dirty & /*paused, timelapse*/ 34) {
+    			if (paused) {
+    				timelapse.pause();
+    			} else {
+    				timelapse.play();
+    			}
+    		}
+
+    		if ($$self.$$.dirty & /*timelapse, time*/ 18) {
+    			timelapse.seek(time);
+    		}
+    	};
+
+    	return [totalPlaytime, timelapse, latestImage, $timelapse, time, paused, allsky];
+    }
+
+    class Timelapse extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {
+    			paused: 5,
+    			time: 4,
+    			allsky: 6,
+    			totalPlaytime: 0
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Timelapse",
+    			options,
+    			id: create_fragment$2.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*time*/ ctx[4] === undefined && !('time' in props)) {
+    			console.warn("<Timelapse> was created without expected prop 'time'");
+    		}
+
+    		if (/*allsky*/ ctx[6] === undefined && !('allsky' in props)) {
+    			console.warn("<Timelapse> was created without expected prop 'allsky'");
+    		}
+
+    		if (/*totalPlaytime*/ ctx[0] === undefined && !('totalPlaytime' in props)) {
+    			console.warn("<Timelapse> was created without expected prop 'totalPlaytime'");
+    		}
+    	}
+
+    	get paused() {
+    		throw new Error("<Timelapse>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set paused(value) {
+    		throw new Error("<Timelapse>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get time() {
+    		throw new Error("<Timelapse>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set time(value) {
+    		throw new Error("<Timelapse>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get allsky() {
+    		throw new Error("<Timelapse>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set allsky(value) {
+    		throw new Error("<Timelapse>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get totalPlaytime() {
+    		throw new Error("<Timelapse>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set totalPlaytime(value) {
+    		throw new Error("<Timelapse>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/Player.svelte generated by Svelte v3.42.1 */
+    const file$1 = "src/Player.svelte";
+
+    function create_fragment$1(ctx) {
+    	let div2;
+    	let timelapse;
+    	let updating_time;
+    	let updating_totalPlaytime;
+    	let t0;
+    	let div1;
+    	let div0;
+    	let span0;
+    	let t1_value = format(/*time*/ ctx[1]) + "";
+    	let t1;
+    	let t2;
+    	let span1;
+    	let t3;
+    	let t4_value = (/*paused*/ ctx[2] ? 'play' : 'pause') + "";
+    	let t4;
+    	let t5;
+    	let t6;
+    	let span2;
+    	let t7_value = format(/*$duration*/ ctx[5]) + "";
+    	let t7;
+    	let t8;
+    	let progress;
+    	let progress_value_value;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	function timelapse_time_binding(value) {
+    		/*timelapse_time_binding*/ ctx[9](value);
+    	}
+
+    	function timelapse_totalPlaytime_binding(value) {
+    		/*timelapse_totalPlaytime_binding*/ ctx[10](value);
+    	}
+
+    	let timelapse_props = {
+    		paused: /*paused*/ ctx[2],
+    		allsky: /*allsky*/ ctx[0]
+    	};
+
+    	if (/*time*/ ctx[1] !== void 0) {
+    		timelapse_props.time = /*time*/ ctx[1];
+    	}
+
+    	if (/*duration*/ ctx[3] !== void 0) {
+    		timelapse_props.totalPlaytime = /*duration*/ ctx[3];
+    	}
+
+    	timelapse = new Timelapse({ props: timelapse_props, $$inline: true });
+    	binding_callbacks.push(() => bind(timelapse, 'time', timelapse_time_binding));
+    	binding_callbacks.push(() => bind(timelapse, 'totalPlaytime', timelapse_totalPlaytime_binding));
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			create_component(timelapse.$$.fragment);
+    			t0 = space();
+    			div1 = element("div");
+    			div0 = element("div");
+    			span0 = element("span");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			span1 = element("span");
+    			t3 = text("click anywhere to ");
+    			t4 = text(t4_value);
+    			t5 = text(" / drag to seek");
+    			t6 = space();
+    			span2 = element("span");
+    			t7 = text(t7_value);
+    			t8 = space();
+    			progress = element("progress");
+    			attr_dev(span0, "class", "time svelte-pv6ez4");
+    			add_location(span0, file$1, 69, 12, 2147);
+    			attr_dev(span1, "class", "svelte-pv6ez4");
+    			add_location(span1, file$1, 70, 12, 2200);
+    			attr_dev(span2, "class", "time svelte-pv6ez4");
+    			add_location(span2, file$1, 71, 12, 2286);
+    			attr_dev(div0, "class", "info svelte-pv6ez4");
+    			add_location(div0, file$1, 68, 8, 2116);
+    			progress.value = progress_value_value = /*time*/ ctx[1] / /*$duration*/ ctx[5] || 0;
+    			attr_dev(progress, "class", "svelte-pv6ez4");
+    			add_location(progress, file$1, 74, 8, 2356);
+    			attr_dev(div1, "class", "controls svelte-pv6ez4");
+    			set_style(div1, "opacity", /*$duration*/ ctx[5] && /*showControls*/ ctx[4] ? 1 : 0);
+    			add_location(div1, file$1, 66, 4, 2031);
+    			attr_dev(div2, "class", "svelte-pv6ez4");
+    			add_location(div2, file$1, 53, 0, 1591);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			mount_component(timelapse, div2, null);
+    			append_dev(div2, t0);
+    			append_dev(div2, div1);
+    			append_dev(div1, div0);
+    			append_dev(div0, span0);
+    			append_dev(span0, t1);
+    			append_dev(div0, t2);
+    			append_dev(div0, span1);
+    			append_dev(span1, t3);
+    			append_dev(span1, t4);
+    			append_dev(span1, t5);
+    			append_dev(div0, t6);
+    			append_dev(div0, span2);
+    			append_dev(span2, t7);
+    			append_dev(div1, t8);
+    			append_dev(div1, progress);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div2, "mousemove", /*handleMove*/ ctx[6], false, false, false),
+    					listen_dev(div2, "touchmove", prevent_default(/*handleMove*/ ctx[6]), false, true, false),
+    					listen_dev(div2, "mousedown", /*handleMousedown*/ ctx[7], false, false, false),
+    					listen_dev(div2, "touchstart", prevent_default(/*handleMousedown*/ ctx[7]), false, true, false),
+    					listen_dev(div2, "touchend", prevent_default(/*handleMouseup*/ ctx[8]), false, true, false),
+    					listen_dev(div2, "mouseup", /*handleMouseup*/ ctx[8], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const timelapse_changes = {};
+    			if (dirty & /*paused*/ 4) timelapse_changes.paused = /*paused*/ ctx[2];
+    			if (dirty & /*allsky*/ 1) timelapse_changes.allsky = /*allsky*/ ctx[0];
+
+    			if (!updating_time && dirty & /*time*/ 2) {
+    				updating_time = true;
+    				timelapse_changes.time = /*time*/ ctx[1];
+    				add_flush_callback(() => updating_time = false);
+    			}
+
+    			if (!updating_totalPlaytime && dirty & /*duration*/ 8) {
+    				updating_totalPlaytime = true;
+    				timelapse_changes.totalPlaytime = /*duration*/ ctx[3];
+    				add_flush_callback(() => updating_totalPlaytime = false);
+    			}
+
+    			timelapse.$set(timelapse_changes);
+    			if ((!current || dirty & /*time*/ 2) && t1_value !== (t1_value = format(/*time*/ ctx[1]) + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*paused*/ 4) && t4_value !== (t4_value = (/*paused*/ ctx[2] ? 'play' : 'pause') + "")) set_data_dev(t4, t4_value);
+    			if ((!current || dirty & /*$duration*/ 32) && t7_value !== (t7_value = format(/*$duration*/ ctx[5]) + "")) set_data_dev(t7, t7_value);
+
+    			if (!current || dirty & /*time, $duration*/ 34 && progress_value_value !== (progress_value_value = /*time*/ ctx[1] / /*$duration*/ ctx[5] || 0)) {
+    				prop_dev(progress, "value", progress_value_value);
+    			}
+
+    			if (!current || dirty & /*$duration, showControls*/ 48) {
+    				set_style(div1, "opacity", /*$duration*/ ctx[5] && /*showControls*/ ctx[4] ? 1 : 0);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(timelapse.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(timelapse.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			destroy_component(timelapse);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function format(seconds) {
+    	if (isNaN(seconds)) return '...';
+    	const minutes = Math.floor(seconds / 60);
+    	seconds = Math.floor(seconds % 60);
+    	if (seconds < 10) seconds = '0' + seconds;
+    	return `${minutes}:${seconds}`;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let $duration,
+    		$$unsubscribe_duration = noop,
+    		$$subscribe_duration = () => ($$unsubscribe_duration(), $$unsubscribe_duration = subscribe(duration, $$value => $$invalidate(5, $duration = $$value)), duration);
+
+    	$$self.$$.on_destroy.push(() => $$unsubscribe_duration());
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Player', slots, []);
+    	let { allsky = false } = $$props;
+    	let time = 0;
+    	let paused = true;
+    	let duration;
+    	let showControls = true;
+    	let showControlsTimeout;
+
+    	// Used to track time of last mouse down event
+    	let lastMouseDown;
+
+    	function handleMove(e) {
+    		// Make the controls visible, but fade out after
+    		// 2.5 seconds of inactivity
+    		clearTimeout(showControlsTimeout);
+
+    		showControlsTimeout = setTimeout(() => $$invalidate(4, showControls = false), 2500);
+    		$$invalidate(4, showControls = true);
+    		if (!duration) return; // video not loaded yet
+    		if (e.type !== 'touchmove' && !(e.buttons & 1)) return; // mouse not down
+
+    		const clientX = e.type === 'touchmove'
+    		? e.touches[0].clientX
+    		: e.clientX;
+
+    		const { left, right } = this.getBoundingClientRect();
+    		$$invalidate(1, time = $duration * (clientX - left) / (right - left));
+    	}
+
+    	// we can't rely on the built-in click event, because it fires
+    	// after a drag — we have to listen for clicks ourselves
+    	function handleMousedown(e) {
+    		lastMouseDown = new Date();
+    	}
+
+    	function handleMouseup(e) {
+    		// TODO handle distance dragged
+    		if (new Date() - lastMouseDown < 300) {
+    			//Play on click
+    			if (paused) {
+    				$$invalidate(2, paused = false);
+    			} else {
+    				$$invalidate(2, paused = true);
+    			}
+
+    			
+    		}
+    	}
+
+    	const writable_props = ['allsky'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Player> was created with unknown prop '${key}'`);
+    	});
+
+    	function timelapse_time_binding(value) {
+    		time = value;
+    		$$invalidate(1, time);
+    	}
+
+    	function timelapse_totalPlaytime_binding(value) {
+    		duration = value;
+    		$$subscribe_duration($$invalidate(3, duration));
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('allsky' in $$props) $$invalidate(0, allsky = $$props.allsky);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		writable,
+    		Timelapse,
+    		allsky,
+    		time,
+    		paused,
+    		duration,
+    		showControls,
+    		showControlsTimeout,
+    		lastMouseDown,
+    		handleMove,
+    		handleMousedown,
+    		handleMouseup,
+    		format,
+    		$duration
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('allsky' in $$props) $$invalidate(0, allsky = $$props.allsky);
+    		if ('time' in $$props) $$invalidate(1, time = $$props.time);
+    		if ('paused' in $$props) $$invalidate(2, paused = $$props.paused);
+    		if ('duration' in $$props) $$subscribe_duration($$invalidate(3, duration = $$props.duration));
+    		if ('showControls' in $$props) $$invalidate(4, showControls = $$props.showControls);
+    		if ('showControlsTimeout' in $$props) showControlsTimeout = $$props.showControlsTimeout;
+    		if ('lastMouseDown' in $$props) lastMouseDown = $$props.lastMouseDown;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		allsky,
+    		time,
+    		paused,
+    		duration,
+    		showControls,
+    		$duration,
+    		handleMove,
+    		handleMousedown,
+    		handleMouseup,
+    		timelapse_time_binding,
+    		timelapse_totalPlaytime_binding
+    	];
+    }
+
+    class Player extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { allsky: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Player",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+
+    	get allsky() {
+    		throw new Error("<Player>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set allsky(value) {
+    		throw new Error("<Player>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/App.svelte generated by Svelte v3.42.1 */
+
+    const { console: console_1 } = globals;
+    const file = "src/App.svelte";
+
+    function create_fragment(ctx) {
+    	let header;
+    	let div0;
+    	let img;
+    	let img_src_value;
+    	let t0;
+    	let div1;
+    	let h1;
+    	let t1_value = (/*toggle*/ ctx[0] ? "AllSky" : "Weather") + "";
+    	let t1;
+    	let t2;
+    	let t3;
+    	let main;
+    	let div2;
+    	let player;
+    	let t4;
+    	let footer;
+    	let current;
+
+    	player = new Player({
+    			props: { allsky: /*toggle*/ ctx[0] },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			header = element("header");
+    			div0 = element("div");
+    			img = element("img");
+    			t0 = space();
+    			div1 = element("div");
+    			h1 = element("h1");
+    			t1 = text(t1_value);
+    			t2 = text(" Timelapse");
+    			t3 = space();
+    			main = element("main");
+    			div2 = element("div");
+    			create_component(player.$$.fragment);
+    			t4 = space();
+    			footer = element("footer");
+    			if (!src_url_equal(img.src, img_src_value = "/timelapse/" + "weather" + "/uc-rothney.png")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "class", "header-img");
+    			attr_dev(img, "alt", "University of Calgary logo");
+    			add_location(img, file, 12, 8, 290);
+    			attr_dev(div0, "class", "left");
+    			add_location(div0, file, 11, 4, 263);
+    			add_location(h1, file, 16, 8, 458);
+    			attr_dev(div1, "class", "right");
+    			add_location(div1, file, 15, 4, 430);
+    			attr_dev(header, "class", "flex-container row");
+    			add_location(header, file, 10, 0, 223);
+    			attr_dev(div2, "class", "player");
+    			add_location(div2, file, 22, 4, 623);
+    			attr_dev(main, "class", "flex-container column");
+    			add_location(main, file, 21, 0, 582);
+    			add_location(footer, file, 35, 0, 1005);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, header, anchor);
+    			append_dev(header, div0);
+    			append_dev(div0, img);
+    			append_dev(header, t0);
+    			append_dev(header, div1);
+    			append_dev(div1, h1);
+    			append_dev(h1, t1);
+    			append_dev(h1, t2);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, main, anchor);
+    			append_dev(main, div2);
+    			mount_component(player, div2, null);
+    			insert_dev(target, t4, anchor);
+    			insert_dev(target, footer, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if ((!current || dirty & /*toggle*/ 1) && t1_value !== (t1_value = (/*toggle*/ ctx[0] ? "AllSky" : "Weather") + "")) set_data_dev(t1, t1_value);
+    			const player_changes = {};
+    			if (dirty & /*toggle*/ 1) player_changes.allsky = /*toggle*/ ctx[0];
+    			player.$set(player_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(player.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(player.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(header);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(main);
+    			destroy_component(player);
+    			if (detaching) detach_dev(t4);
+    			if (detaching) detach_dev(footer);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('App', slots, []);
+    	let toggle = false;
+
+    	console.log("Hello there");
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$capture_state = () => ({ Player, toggle });
+
+    	$$self.$inject_state = $$props => {
+    		if ('toggle' in $$props) $$invalidate(0, toggle = $$props.toggle);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [toggle];
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment.name
+    		});
+    	}
+    }
+
+    const app = new App({
+        target: document.body,
+        props: {},
+    });
+
+    return app;
+
+}());
 //# sourceMappingURL=bundle.js.map
