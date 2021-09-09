@@ -7,7 +7,6 @@
 
      toggle = true;
  }
- console.log("Hello there");
 
 </script>
 
