@@ -12,9 +12,11 @@
  let playStartTime;
  let latestImage;
  let timelapse;
+ let img;
  const millisecondsPerFrame = 1000/$frameRate;
  const secondsPerFrame = millisecondsPerFrame/1000;
-
+ // TODO: fix double initialization
+ // TODO: fix double play/seek behaviour
  // Before mounting setup
  if (allsky) {
      playStartTime = 1200;
@@ -110,10 +112,7 @@
 
      function play() {
          interval = setInterval(() => {
-             if (time < $totalPlaytime) {
-                 update(n => nextImageFilename(n, $latestImage));
-                 time = time + secondsPerFrame;
-             };
+             next();
          }, millisecondsPerFrame);
      }
 
@@ -128,6 +127,13 @@
              set(seekTo);
          }
      }
+     function next(){
+         if (time < $totalPlaytime) {
+             update(n => nextImageFilename(n, $latestImage));
+             time = time + secondsPerFrame;
+         };
+     }
+
      function resetStartPoint(){
          pause();
          let seekTo = url + imageFilenameFromNumber(playStartTime);
@@ -139,7 +145,8 @@
          play: () => play(),
          pause: () => pause(),
          seek: (time: number) => seek(time),
-         resetStartPoint: () => resetStartPoint()
+         resetStartPoint: () => resetStartPoint(),
+         next: () => next(),
      };
 
  }
@@ -165,4 +172,4 @@
 </script>
 <img draggable="false"
      src={$timelapse}
-     alt="Timelapse" />
+                alt="Timelapse" />

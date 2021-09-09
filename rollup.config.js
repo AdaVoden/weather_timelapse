@@ -1,6 +1,7 @@
 import svelte from "rollup-plugin-svelte";
 import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
@@ -34,15 +35,26 @@ function serve() {
   };
 }
 
-export default {
+export default ["weather", "allsky"].map((name, index) => ({
   input: "src/main.ts",
   output: {
-    //sourcemap: true,
+    sourcemap: true,
     format: "iife",
-    name: "app",
-    file: "public/build/bundle.js",
+    name: name,
+    file: `public/${name}/build/bundle.js`,
   },
-  plugins: [
+  plugins: sveltePlugins(name),
+  watch: {
+    clearScreen: false,
+  },
+}));
+
+function sveltePlugins(name) {
+  return [
+    replace({
+      __timelapseVariant__: JSON.stringify(name),
+      preventAssignment: true,
+    }),
     svelte({
       preprocess: sveltePreprocess({
         sourceMap: !production,
@@ -78,13 +90,10 @@ export default {
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
-    !production && livereload("public"),
+    !production && livereload(`public/${name}`),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
     production && terser(),
-  ],
-  watch: {
-    clearScreen: false,
-  },
-};
+  ];
+}
