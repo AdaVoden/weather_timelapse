@@ -3,7 +3,7 @@ import requests
 base_url = "https://cam01.sci.ucalgary.ca/images/AllSkyCamImages"
 suffix = ".jpg"
 num = 0
-while num <= 1620:
+while num <= 2400:
     if ((num - 60) % 100) == 0 and num != 0:
         num -= 60
         num += 100

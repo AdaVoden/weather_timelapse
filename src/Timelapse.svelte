@@ -79,8 +79,9 @@
              num += 100;
          }
      }
-     if (num > 2400) {
+     if (num >= 2400) {
          // Reset just in case
+         // 2400 does not exist
          num = 0;
      }
      return num;
@@ -94,14 +95,18 @@
      return num;
  }
 
- function imageFilenameFromTime(time: number, frameRate: number): string {
+ function imageFilenameFromTime(time: number, frameRate: number, startTime: number): string {
      const currentFrame = time * frameRate;
      const totalFrameMinutes = currentFrame * 2;
      const hours = Math.floor(totalFrameMinutes / 60);
      const minutes = Math.floor(totalFrameMinutes % 60);
-     const frameTime = hours * 100 + minutes;
-     // * 100 so it's in digit slot 3, or 3 and 4;
-     const imageTime = clampImageNumber(frameTime + playStartTime);
+     let frameTime = hours * 100 + minutes + startTime;
+     // * 100 so hours are in digit 3 or 3 and 4;
+     // Add play start time to make sure it's in the proper spot time-wise
+     if (frameTime >= 2400) {
+         frameTime -= 2400; // reset the clock
+     }
+     const imageTime = clampImageNumber(frameTime);
      const imageFilename = imageFilenameFromNumber(imageTime);
      return imageFilename;
  }
@@ -123,7 +128,7 @@
      function seek(time: number) {
          if (time < 0) {time = 0};
          if (time < $totalPlaytime) {
-             let seekTo = url + imageFilenameFromTime(time, $frameRate);
+             let seekTo = url + imageFilenameFromTime(time, $frameRate, playStartTime);
              set(seekTo);
          }
      }
