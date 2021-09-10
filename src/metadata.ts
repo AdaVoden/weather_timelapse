@@ -29,11 +29,12 @@ export function latestImageFromURL(url: string) {
 function calculateTotalPlaytime(latestImage: string, frameRate: number, startTime: number): number {
 
   const latestTime = parseFloat(latestImage);
+  let totalTime: number;
   if (startTime > latestTime) {
-    return 0;
+    totalTime = latestTime + startTime;
+  } else {
+    totalTime = latestTime - startTime;
   }
-
-  const totalTime = latestTime - startTime;
   const minutes = Math.floor(totalTime % 60);
   const hours = Math.floor((totalTime - minutes) / 100);
   // divide by 100 to reduce to single/double digits of hours
