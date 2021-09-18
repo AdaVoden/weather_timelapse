@@ -1,9 +1,11 @@
 import { readable, derived, writable } from 'svelte/store';
-let intervalCheck: number = 120000; /* 2 minutes */
+const intervalCheck: number = 120000; /* 2 minutes */
 
 export const frameRate = writable(5)
 
 function getLatestFilename(url: string): string {
+  // TODO: Make this function a promise
+  // TODO: Make a buffer system
   let result: string;
   const webReq = new XMLHttpRequest();
   webReq.open("GET", url, false);
@@ -28,21 +30,25 @@ export function latestImageFromURL(url: string) {
 
 function calculateTotalPlaytime(latestImage: string, frameRate: number, startTime: number): number {
 
-  const latestTime = parseFloat(latestImage);
+  const latestTime = parseInt(latestImage);
+
   let totalTime: number;
   if (startTime > latestTime) {
     totalTime = latestTime + startTime;
   } else {
     totalTime = latestTime - startTime;
   }
-  const minutes = Math.floor(totalTime % 60);
-  const hours = Math.floor((totalTime - minutes) / 100);
-  // divide by 100 to reduce to single/double digits of hours
-  const totalImages = (hours * 30) + (minutes / 2);
+  // To string since why do math when string manipulation is faster?
+  // "faster" being to program, runtime doesn't matter since
+  // this should run once per 2 minutes maximum.
+  const totalTimeString = String(totalTime);
+  const hours = parseInt(totalTimeString.slice(0, 2));
+  const minutes = parseInt(totalTimeString.slice(2, 4));
+  const totalImages = (hours * 30) + Math.round(minutes / 2);
   const playTime = totalImages / frameRate;
   return playTime;
-
 }
+
 export function totalPlaytimeFromStores(latestImage, frameRate, startTime: number) {
   return derived(
     [latestImage, frameRate],

@@ -88,9 +88,9 @@
  }
 
  function roundToEven(num: number) {
-     num = Math.floor(num); // No floats
+     num = Math.round(num); // No floats
      if (num % 2 === 1) {
-         num = parseInt(num - 1);
+         num = num - 1;
      }
      return num;
  }
@@ -99,7 +99,7 @@
      const currentFrame = time * frameRate;
      const totalFrameMinutes = currentFrame * 2;
      const hours = Math.floor(totalFrameMinutes / 60);
-     const minutes = Math.floor(totalFrameMinutes % 60);
+     const minutes = totalFrameMinutes % 60;
      let frameTime = hours * 100 + minutes + startTime;
      // * 100 so hours are in digit 3 or 3 and 4;
      // Add play start time to make sure it's in the proper spot time-wise
