@@ -38,12 +38,17 @@ function calculateTotalPlaytime(latestImage: string, frameRate: number, startTim
   } else {
     totalTime = latestTime - startTime;
   }
+  console.log(`Latest Time: ${latestTime}`)
+  console.log(`Total Time: ${totalTime}`)
+  
   // To string since why do math when string manipulation is faster?
   // "faster" being to program, runtime doesn't matter since
   // this should run once per 2 minutes maximum.
-  const totalTimeString = String(totalTime);
+  const totalTimeString = String(totalTime).padStart(4, "0");
+  // Ensure 4 digits.
   const hours = parseInt(totalTimeString.slice(0, 2));
   const minutes = parseInt(totalTimeString.slice(2, 4));
+  console.log(`${hours}:${minutes}`)
   const totalImages = (hours * 30) + Math.round(minutes / 2);
   const playTime = totalImages / frameRate;
   return playTime;
